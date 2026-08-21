@@ -1,0 +1,13 @@
+[project]
+name = "student-gpa-ai-impact"
+version = "2.0.0"
+description = "Streamlit application that predicts post-semester GPA from academic, study, and GenAI usage features."
+readme = "README.md"
+requires-python = ">=3.11,<3.14"
+dependencies = [
+    "streamlit>=1.45,<2",
+    "pandas>=2.2,<3",
+    "numpy>=2.0,<3",
+    "scikit-learn>=1.8,<1.9",
+    "joblib>=1.4,<2",
+]

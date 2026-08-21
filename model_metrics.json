@@ -1,0 +1,34 @@
+{
+  "model": "CatBoostRegressor",
+  "target": "Post_Semester_GPA",
+  "features": [
+    "Major_Category",
+    "Year_of_Study",
+    "Pre_Semester_GPA",
+    "Weekly_GenAI_Hours",
+    "Primary_Use_Case",
+    "Prompt_Engineering_Skill",
+    "Tool_Diversity",
+    "Paid_Subscription",
+    "Traditional_Study_Hours",
+    "Perceived_AI_Dependency",
+    "Institutional_Policy",
+    "Anxiety_Level_During_Exams"
+  ],
+  "categorical_features": [
+    "Major_Category",
+    "Year_of_Study",
+    "Primary_Use_Case",
+    "Prompt_Engineering_Skill",
+    "Institutional_Policy"
+  ],
+  "train_rows": 39999,
+  "test_rows": 10000,
+  "mae": 0.11151611614183546,
+  "rmse": 0.1418421350314173,
+  "r2": 0.9165204574898379,
+  "random_state": 42,
+  "iterations": 700,
+  "depth": 7,
+  "learning_rate": 0.05
+}

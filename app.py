@@ -1,0 +1,303 @@
+from pathlib import Path
+import json
+import joblib
+import numpy as np
+import pandas as pd
+import streamlit as st
+
+APP_DIR = Path(__file__).resolve().parent
+MODEL_PATH = APP_DIR / "model.joblib"
+METRICS_PATH = APP_DIR / "model_metrics.json"
+DATA_PATH = APP_DIR / "ai_student_impact_dataset.csv"
+# ==========================================
+# THEME SETTINGS
+# ==========================================
+
+if "theme" not in st.session_state:
+    st.session_state.theme = "dark"
+
+# ==========================================
+# THEME TOGGLE
+# ==========================================
+
+theme_col1, theme_col2 = st.columns([8, 1])
+
+with theme_col2:
+    if st.session_state.theme == "dark":
+        if st.button("☀️", help="Switch to Light Mode"):
+            st.session_state.theme = "light"
+            st.rerun()
+    else:
+        if st.button("🌙", help="Switch to Dark Mode"):
+            st.session_state.theme = "dark"
+            st.rerun()
+
+# ==========================================
+# THEME STYLING
+# ==========================================
+
+if st.session_state.theme == "dark":
+
+    st.markdown("""
+    <style>
+
+    /* Main application */
+    .stApp {
+        background-color: #0E1117;
+        color: #FAFAFA;
+    }
+
+    /* Sidebar */
+    section[data-testid="stSidebar"] {
+        background-color: #161B22;
+    }
+
+    /* Main text */
+    h1, h2, h3, h4, h5, h6 {
+        color: #FFFFFF !important;
+    }
+
+    p, label, span {
+        color: #E6EDF3;
+    }
+
+    /* Input fields */
+    input,
+    textarea {
+        background-color: #21262D !important;
+        color: #FFFFFF !important;
+        border: 1px solid #30363D !important;
+    }
+
+    /* Select boxes */
+    div[data-baseweb="select"] > div {
+        background-color: #21262D !important;
+        color: #FFFFFF !important;
+        border-color: #30363D !important;
+    }
+
+    /* Metrics */
+    div[data-testid="stMetric"] {
+        background-color: #161B22;
+        border: 1px solid #30363D;
+        border-radius: 12px;
+        padding: 15px;
+    }
+
+    /* Buttons */
+    .stButton > button {
+        border-radius: 10px;
+        border: 1px solid #30363D;
+    }
+
+    /* Expanders */
+    div[data-testid="stExpander"] {
+        background-color: #161B22;
+        border: 1px solid #30363D;
+        border-radius: 10px;
+    }
+
+    </style>
+    """, unsafe_allow_html=True)
+
+else:
+
+    st.markdown("""
+    <style>
+
+    /* Main application */
+    .stApp {
+        background-color: #FFFFFF;
+        color: #111827;
+    }
+
+    /* Sidebar */
+    section[data-testid="stSidebar"] {
+        background-color: #F3F4F6;
+    }
+
+    /* Main text */
+    h1, h2, h3, h4, h5, h6 {
+        color: #111827 !important;
+    }
+
+    p, label, span {
+        color: #374151;
+    }
+
+    /* Input fields */
+    input,
+    textarea {
+        background-color: #FFFFFF !important;
+        color: #111827 !important;
+        border: 1px solid #D1D5DB !important;
+    }
+
+    /* Select boxes */
+    div[data-baseweb="select"] > div {
+        background-color: #FFFFFF !important;
+        color: #111827 !important;
+        border-color: #D1D5DB !important;
+    }
+
+    /* Metrics */
+    div[data-testid="stMetric"] {
+        background-color: #F9FAFB;
+        border: 1px solid #E5E7EB;
+        border-radius: 12px;
+        padding: 15px;
+    }
+
+    /* Buttons */
+    .stButton > button {
+        border-radius: 10px;
+        border: 1px solid #D1D5DB;
+    }
+
+    /* Expanders */
+    div[data-testid="stExpander"] {
+        background-color: #F9FAFB;
+        border: 1px solid #E5E7EB;
+        border-radius: 10px;
+    }
+
+    </style>
+    """, unsafe_allow_html=True)
+
+    
+st.set_page_config(
+    page_title="Student 🎓 GPA AI Impact Predictor",
+    page_icon="🎓",
+    layout="wide",
+    initial_sidebar_state="expanded",
+)
+
+@st.cache_resource
+def load_model():
+    if not MODEL_PATH.exists():
+        st.error("The trained model is missing. Run `python train_model.py` first.")
+        st.stop()
+    return joblib.load(MODEL_PATH)
+
+@st.cache_data
+def load_metrics():
+    if METRICS_PATH.exists():
+        return json.loads(METRICS_PATH.read_text(encoding="utf-8"))
+    return {}
+
+model = load_model()
+metrics = load_metrics()
+
+st.title("🎓 Student GPA · AI Impact Predictor")
+st.caption("A machine-learning estimate of post-semester GPA based on academic, study, and GenAI-usage features.")
+
+with st.sidebar:
+    st.header("About")
+    st.write(
+        "This version runs the trained model locally inside Streamlit. "
+        "You can predict your post-semester GPC 📈 before the ending of you semester"
+    )
+    if metrics:
+        st.divider()
+        st.subheader("Model validation")
+        st.metric("R²", f"{metrics.get('r2', 0):.3f}")
+        st.metric("MAE", f"{metrics.get('mae', 0):.3f}")
+        st.caption("Validation metrics are estimates on a held-out test set; they are not a guarantee for an individual student.")
+
+st.info(
+    "Educational tool only: the prediction is an estimate, not an official academic decision, "
+    "admission decision, or guarantee of future GPA."
+)
+
+st.subheader("Student profile")
+col1, col2, col3 = st.columns(3)
+
+with col1:
+    major = st.selectbox("🎓 Major", ["Humanities", "Medical", "Business", "STEM", "Arts"])
+    year = st.selectbox("📚 Year of study", ["Freshman", "Sophomore", "Junior", "Senior", "Graduate"])
+    pre_gpa = st.number_input("📈 Pre-semester GPA", 0.0, 4.0, 3.0, 0.01)
+    traditional_hours = st.number_input("📖 Traditional study hours / week", 0.0, 100.0, 10.0, 0.5)
+
+with col2:
+    genai_hours = st.number_input("🤖 GenAI hours / week", 0.0, 100.0, 5.0, 0.5)
+    use_case = st.selectbox(
+        "🛠️ Primary GenAI use case",
+        ["Copywriting/Drafting", "Ideation", "Summarizing_Reading",
+         "Debugging/Troubleshooting", "Direct_Answer_Generation"],
+    )
+    prompt_skill = st.selectbox("🧠 Prompt-engineering skill", ["Beginner", "Intermediate", "Advanced"])
+    tool_diversity = st.slider("🧩 GenAI tool diversity", 1, 5, 2)
+
+with col3:
+    paid = st.selectbox("💳 Paid GenAI subscription", ["No", "Yes"])
+    ai_dependency = st.slider("🔗 Perceived AI dependency", 1, 10, 5)
+    policy = st.selectbox(
+        "🏫 Institutional GenAI policy",
+        ["Strict_Ban", "Allowed_With_Citation", "Actively_Encouraged"],
+    )
+    anxiety = st.slider("😰 Exam anxiety", 1, 10, 5)
+
+def make_features():
+    return pd.DataFrame([{
+        "Major_Category": major,
+        "Year_of_Study": year,
+        "Pre_Semester_GPA": pre_gpa,
+        "Weekly_GenAI_Hours": genai_hours,
+        "Primary_Use_Case": use_case,
+        "Prompt_Engineering_Skill": prompt_skill,
+        "Tool_Diversity": tool_diversity,
+        "Paid_Subscription": paid == "Yes",
+        "Traditional_Study_Hours": traditional_hours,
+        "Perceived_AI_Dependency": ai_dependency,
+        "Institutional_Policy": policy,
+        "Anxiety_Level_During_Exams": anxiety,
+    }])
+
+def coach_text(prediction):
+    messages = []
+    if pre_gpa < 2.5:
+        messages.append("Your starting GPA is the strongest area to focus on; consistent foundational study is important.")
+    if traditional_hours < 8:
+        messages.append("Consider increasing traditional study time gradually, especially before exams.")
+    if genai_hours > traditional_hours:
+        messages.append("Your GenAI use exceeds your traditional study time. Use AI as a learning aid rather than a replacement for practice.")
+    if ai_dependency >= 8:
+        messages.append("High AI dependency can be risky academically. Try solving problems independently before checking AI.")
+    if anxiety >= 8:
+        messages.append("High exam anxiety may make preparation and practice tests especially valuable.")
+    if not messages:
+        messages.append("Your profile is relatively balanced. Keep monitoring your study habits and use GenAI to reinforce learning.")
+    messages.append(f"The model estimates a post-semester GPA of about {prediction:.2f}.")
+    return messages
+
+if st.button("🔮 Predict Post-Semester GPA", type="primary", use_container_width=True):
+    features_df = make_features()
+    prediction = float(np.clip(model.predict(features_df)[0], 0.0, 4.0))
+
+    st.divider()
+    a, b, c = st.columns(3)
+    with a:
+        st.metric("Predicted Post-Semester GPA", f"{prediction:.2f} / 4.00")
+    with b:
+        change = prediction - pre_gpa
+        st.metric("Estimated change vs. starting GPA", f"{change:+.2f}")
+    with c:
+        if prediction >= 3.5:
+            band = "Strong"
+        elif prediction >= 3.0:
+            band = "Moderate"
+        else:
+            band = "Needs attention"
+        st.metric("Prediction band", band)
+
+    st.subheader("🤖 AI Study Coach")
+    for msg in coach_text(prediction):
+        st.write("• " + msg)
+
+    st.caption(
+        "The coach provides general educational guidance from the entered profile. "
+        "It does not diagnose students or make institutional decisions."
+    )
+
+st.divider()
+st.caption("Built with Streamlit + scikit-learn. No Azure ML endpoint is required.")

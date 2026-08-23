@@ -5,6 +5,21 @@ import numpy as np
 import pandas as pd
 import streamlit as st
 
+# ==========================================
+# GOOGLE ANALYTICS
+# ==========================================
+
+st.html("""
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-BLH8FSGHR1"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-BLH8FSGHR1');
+</script>
+""", unsafe_allow_javascript=True)
+
 APP_DIR = Path(__file__).resolve().parent
 MODEL_PATH = APP_DIR / "model.joblib"
 METRICS_PATH = APP_DIR / "model_metrics.json"

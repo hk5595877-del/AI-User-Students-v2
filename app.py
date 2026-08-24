@@ -8,17 +8,38 @@ import streamlit as st
 # ==========================================
 # GOOGLE ANALYTICS
 # ==========================================
+GA_JS = """
+export default function(component) {
+    if (window.__student_gpa_ga_loaded) {
+        return;
+    }
+    window.__student_gpa_ga_loaded = true;
 
-st.html("""
-<script async src="https://www.googletagmanager.com/gtag/js?id=G-BLH8FSGHR1"></script>
-<script>
-  window.dataLayer = window.dataLayer || [];
-  function gtag(){dataLayer.push(arguments);}
-  gtag('js', new Date());
+    const measurementId = "G-BLH8FSGHR1";
 
-  gtag('config', 'G-BLH8FSGHR1');
-</script>
-""", unsafe_allow_javascript=True)
+    window.dataLayer = window.dataLayer || [];
+
+    window.gtag = function() {
+        window.dataLayer.push(arguments);
+    };
+
+    window.gtag("js", new Date());
+    window.gtag("config", measurementId);
+
+    const script = document.createElement("script");
+    script.async = true;
+    script.src = "https://www.googletagmanager.com/gtag/js?id=" + measurementId;
+
+    document.head.appendChild(script);
+}
+"""
+
+ga_component = st.components.v2.component(
+    "student_gpa_google_analytics",
+    js=GA_JS,
+)
+
+ga_component(key="google_analytics")
 
 APP_DIR = Path(__file__).resolve().parent
 MODEL_PATH = APP_DIR / "model.joblib"

@@ -497,10 +497,25 @@ def show_home_page():
                 .eq("id", user_id)
                 .maybe_single()
                 .execute()
-)
+            )
+            
+             if profile_response.data:
 
-    
+            full_name = (
+                profile_response.data.get("full_name")
+                or "User"
+            )
 
+            account_type = (
+                profile_response.data.get("account_type")
+                or account_type
+            )
+
+except Exception as e:
+
+    st.error(
+        f"Profile loading error: {e}"
+    ) 
 
     # ==========================================
     # WELCOME SECTION

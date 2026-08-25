@@ -497,6 +497,7 @@ def show_home_page():
         if st.session_state.user:
 
             user_id = st.session_state.user.id
+            st.write("DEBUG USER ID:", user_id)
 
             profile_response = (
                 supabase

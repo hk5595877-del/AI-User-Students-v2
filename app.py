@@ -497,7 +497,6 @@ def show_home_page():
         if st.session_state.user:
 
             user_id = st.session_state.user.id
-            st.write("DEBUG USER ID:", user_id)
 
             profile_response = (
                 supabase
@@ -506,7 +505,7 @@ def show_home_page():
                 .eq("id", user_id)
                 .execute()
             )
-            st.write("DEBUG PROFILE:", profile_response.data)
+           
 
             if profile_response.data:
 
@@ -533,7 +532,7 @@ def show_home_page():
     # ==========================================
 
     st.title(
-        f"👋 Welcome, {full_name}!"
+        f"👋 Welcome!"
     )
 
     if account_type == "student":

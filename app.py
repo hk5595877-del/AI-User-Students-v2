@@ -517,8 +517,8 @@ def show_home_page():
 
     except Exception as e:
 
-    st.error(
-        f"Profile loading error: {e}"
+        st.error(
+            f"Profile loading error: {e}"
     )
 
 

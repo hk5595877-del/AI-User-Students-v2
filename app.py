@@ -771,33 +771,102 @@ if st.session_state.user is None:
 if "current_page" not in st.session_state:
     st.session_state.current_page = "Home"
 
-with st.sidebar:
+account_type = st.session_state.get(
+    "account_type",
+    "student"
+)
 
-    st.title("🎓 StudentGPA AI")
+# ==========================================
+# STUDENT NAVIGATION
+# ==========================================
 
-    st.divider()
+if account_type == "student":
 
-    if st.button("🏠 Home", use_container_width=True):
-        st.session_state.current_page = "Home"
-        st.rerun()
+    nav_col1, nav_col2, nav_col3 = st.columns(
+        [1, 1, 1]
+    )
 
-    if st.button("🎓 GPA Predictor", use_container_width=True):
-        st.session_state.current_page = "GPA Predictor"
-        st.rerun()
+    with nav_col1:
 
-    st.divider()
+        if st.button(
+            "🏠 Home",
+            use_container_width=True
+        ):
 
-    if st.button("🚪 Logout", use_container_width=True):
-        supabase.auth.sign_out()
-        st.session_state.user = None
-        st.session_state.account_type = None
-        st.session_state.current_page = "Home"
-        st.rerun()
-if st.session_state.current_page == "Home":
+            st.session_state.current_page = "Home"
+            st.rerun()
 
-        show_home_page()
+    with nav_col2:
 
-        st.stop()
+        if st.button(
+            "🎓 GPA Predictor",
+            use_container_width=True
+        ):
+
+            st.session_state.current_page = "GPA Predictor"
+            st.rerun()
+
+    with nav_col3:
+
+        if st.button(
+            "🚪 Logout",
+            use_container_width=True
+        ):
+
+            supabase.auth.sign_out()
+
+            st.session_state.user = None
+            st.session_state.account_type = None
+            st.session_state.current_page = "Home"
+
+            st.rerun()
+
+
+# ==========================================
+# INSTITUTE NAVIGATION
+# ==========================================
+
+else:
+
+    nav_col1, nav_col2, nav_col3 = st.columns(
+        [1, 1, 1]
+    )
+
+    with nav_col1:
+
+        if st.button(
+            "🏠 Home",
+            use_container_width=True
+        ):
+
+            st.session_state.current_page = "Home"
+            st.rerun()
+
+    with nav_col2:
+
+        if st.button(
+            "🏫 Institute Predictor",
+            use_container_width=True
+        ):
+
+            st.session_state.current_page = "Institute Predictor"
+            st.rerun()
+
+    with nav_col3:
+
+        if st.button(
+            "🚪 Logout",
+            use_container_width=True
+        ):
+
+            supabase.auth.sign_out()
+
+            st.session_state.user = None
+            st.session_state.account_type = None
+            st.session_state.current_page = "Home"
+
+            st.rerun()
+
 
 st.divider()
 
@@ -816,6 +885,35 @@ def load_metrics():
 
 model = load_model()
 metrics = load_metrics()
+# ==========================================
+# PAGE ROUTING
+# ==========================================
+
+if st.session_state.current_page == "Home":
+
+    show_home_page()
+
+    st.stop()
+
+
+if st.session_state.current_page == "Institute Predictor":
+
+    if account_type == "institute":
+
+        show_institute_predictor(model)
+
+        st.stop()
+
+    else:
+
+        st.error(
+            "❌ You do not have permission to access "
+            "the Institute Predictor."
+        )
+
+        st.session_state.current_page = "Home"
+
+        st.rerun()
 
 st.title("🎓 Student GPA · AI Impact Predictor")
 st.caption("A machine-learning estimate of post-semester GPA based on academic, study, and GenAI-usage features.")

@@ -26,6 +26,7 @@ if "account_type" not in st.session_state:
 
 if "auth_page" not in st.session_state:
     st.session_state.auth_page = "home"
+    
 
 # ==========================================
 # GOOGLE ANALYTICS
@@ -229,6 +230,256 @@ st.set_page_config(
     layout="wide",
     initial_sidebar_state="expanded",
 )
+# ==========================================
+# AUTHENTICATION UI
+# ==========================================
+
+def show_auth_page():
+
+    st.title("🎓 StudentGPA AI")
+
+    st.subheader(
+        "AI-Powered Student GPA & GenAI Impact Predictor"
+    )
+
+    st.write(
+        "StudentGPA AI uses academic performance, study habits, "
+        "GenAI usage, and other student factors to estimate "
+        "post-semester GPA and provide personalized study guidance."
+    )
+
+    st.info(
+        "Create an account to access the GPA prediction system. "
+        "Choose the account type that matches you."
+    )
+
+    auth_option = st.radio(
+        "Choose an option",
+        ["🔐 Sign In", "📝 Create Account"],
+        horizontal=True
+    )
+
+    st.divider()
+
+    # ==========================================
+    # CREATE ACCOUNT
+    # ==========================================
+
+    if auth_option == "📝 Create Account":
+
+        st.subheader("Create your account")
+
+        account_type = st.radio(
+            "Account type",
+            ["🎓 Student", "🏫 Institute"],
+            horizontal=True
+        )
+
+        if account_type == "🎓 Student":
+            name_label = "Full Name"
+        else:
+            name_label = "Institute Name"
+
+        full_name = st.text_input(
+            name_label,
+            key="signup_name"
+        )
+
+        email = st.text_input(
+            "Email Address",
+            key="signup_email"
+        )
+
+        password = st.text_input(
+            "Password",
+            type="password",
+            key="signup_password"
+        )
+
+        confirm_password = st.text_input(
+            "Confirm Password",
+            type="password",
+            key="signup_confirm_password"
+        )
+
+        if st.button(
+            "Create Account",
+            type="primary",
+            use_container_width=True
+        ):
+
+            if not full_name.strip():
+
+                st.error(
+                    f"Please enter your {name_label.lower()}."
+                )
+
+            elif not email.strip():
+
+                st.error(
+                    "Please enter your email address."
+                )
+
+            elif not password:
+
+                st.error(
+                    "Please enter a password."
+                )
+
+            elif len(password) < 6:
+
+                st.error(
+                    "Password must be at least 6 characters."
+                )
+
+            elif password != confirm_password:
+
+                st.error(
+                    "Passwords do not match."
+                )
+
+            else:
+
+                selected_account_type = (
+                    "student"
+                    if account_type == "🎓 Student"
+                    else "institute"
+                )
+
+                try:
+
+                    response = supabase.auth.sign_up(
+                        {
+                            "email": email.strip(),
+                            "password": password,
+                            "options": {
+                                "data": {
+                                    "full_name": full_name.strip(),
+                                    "account_type": selected_account_type
+                                }
+                            }
+                        }
+                    )
+
+                    if response.user:
+
+                        st.success(
+                            "✅ Account created successfully!"
+                        )
+
+                        st.info(
+                            "📧 Please check your email and "
+                            "confirm your account before signing in."
+                        )
+
+                except Exception as e:
+
+                    st.error(
+                        f"Unable to create account: {str(e)}"
+                    )
+
+    # ==========================================
+    # SIGN IN
+    # ==========================================
+
+    else:
+
+        st.subheader("Sign in to your account")
+
+        email = st.text_input(
+            "Email Address",
+            key="signin_email"
+        )
+
+        password = st.text_input(
+            "Password",
+            type="password",
+            key="signin_password"
+        )
+
+        if st.button(
+            "Sign In",
+            type="primary",
+            use_container_width=True
+        ):
+
+            if not email.strip():
+
+                st.error(
+                    "Please enter your email address."
+                )
+
+            elif not password:
+
+                st.error(
+                    "Please enter your password."
+                )
+
+            else:
+
+                try:
+
+                    response = (
+                        supabase.auth
+                        .sign_in_with_password(
+                            {
+                                "email": email.strip(),
+                                "password": password
+                            }
+                        )
+                    )
+
+                    if response.user:
+
+                        st.session_state.user = response.user
+
+                        user_id = response.user.id
+
+                        profile_response = (
+                            supabase
+                            .table("profiles")
+                            .select(
+                                "full_name, account_type"
+                            )
+                            .eq(
+                                "id",
+                                user_id
+                            )
+                            .single()
+                            .execute()
+                        )
+
+                        if profile_response.data:
+
+                            st.session_state.account_type = (
+                                profile_response
+                                .data["account_type"]
+                            )
+
+                        st.success(
+                            "✅ Sign in successful!"
+                        )
+
+                        st.rerun()
+
+                except Exception:
+
+                    st.error(
+                        "❌ Sign in failed. Please check "
+                        "your email, password, and email "
+                        "verification."
+                    )
+
+
+# ==========================================
+# PROTECT THE MAIN APPLICATION
+# ==========================================
+
+if st.session_state.user is None:
+
+    show_auth_page()
+
+    st.stop()
 
 @st.cache_resource
 def load_model():

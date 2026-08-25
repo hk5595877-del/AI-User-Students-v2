@@ -235,62 +235,7 @@ st.set_page_config(
 # ==========================================
 
 def show_auth_page():
-    # ==========================================
-# LOGGED-IN HOME PAGE
-# ==========================================
 
-def show_home_page():
-
-    st.title("🎓 StudentGPA AI")
-
-    st.subheader(
-        "AI-Powered Student GPA & GenAI Impact Predictor"
-    )
-
-    st.write(
-        "Welcome to StudentGPA AI — an AI-powered platform "
-        "designed to help students understand and predict "
-        "their academic performance."
-    )
-
-    st.write(
-        "The platform uses academic information, study habits, "
-        "and Generative AI usage to estimate post-semester GPA "
-        "and provide useful academic insights."
-    )
-
-    st.divider()
-
-    st.subheader("✨ What can you do?")
-
-    col1, col2, col3 = st.columns(3)
-
-    with col1:
-        st.markdown("### 🎓 GPA Prediction")
-        st.write(
-            "Estimate your post-semester GPA using "
-            "your academic and study information."
-        )
-
-    with col2:
-        st.markdown("### 🤖 GenAI Impact")
-        st.write(
-            "Explore how your use of Generative AI "
-            "relates to your academic performance."
-        )
-
-    with col3:
-        st.markdown("### 📊 Academic Insights")
-        st.write(
-            "Understand important factors that may "
-            "influence your predicted GPA."
-        )
-
-    st.divider()
-
-    st.info(
-        "Use the GPA Predictor tab above to start your prediction."
-    )
 
     st.title("🎓 StudentGPA AI")
 
@@ -525,6 +470,62 @@ def show_home_page():
                         "your email, password, and email "
                         "verification."
                     )
+# ==========================================
+# LOGGED-IN HOME PAGE
+# ==========================================
+
+def show_home_page():
+
+    st.title("🎓 StudentGPA AI")
+
+    st.subheader(
+        "AI-Powered Student GPA & GenAI Impact Predictor"
+    )
+
+    st.write(
+        "Welcome to StudentGPA AI — an AI-powered platform "
+        "designed to help students understand and predict "
+        "their academic performance."
+    )
+
+    st.write(
+        "The platform uses academic information, study habits, "
+        "and Generative AI usage to estimate post-semester GPA "
+        "and provide useful academic insights."
+    )
+
+    st.divider()
+
+    st.subheader("✨ What can you do?")
+
+    col1, col2, col3 = st.columns(3)
+
+    with col1:
+        st.markdown("### 🎓 GPA Prediction")
+        st.write(
+            "Estimate your post-semester GPA using "
+            "your academic and study information."
+        )
+
+    with col2:
+        st.markdown("### 🤖 GenAI Impact")
+        st.write(
+            "Explore how your use of Generative AI "
+            "relates to your academic performance."
+        )
+
+    with col3:
+        st.markdown("### 📊 Academic Insights")
+        st.write(
+            "Understand important factors that may "
+            "influence your predicted GPA."
+        )
+
+    st.divider()
+
+    st.info(
+        "Use the GPA Predictor tab above to start your prediction."
+    )
 
 
 # ==========================================
@@ -562,6 +563,11 @@ with nav_col3:
         st.session_state.account_type = None
         st.session_state.current_page = "Home"
         st.rerun()
+if st.session_state.current_page == "Home":
+
+        show_home_page()
+
+        st.stop()
 
 st.divider()
 

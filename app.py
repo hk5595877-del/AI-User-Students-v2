@@ -515,8 +515,11 @@ def show_home_page():
                     or account_type
                 )
 
-    except Exception:
-        pass
+    except Exception as e:
+
+    st.error(
+        f"Profile loading error: {e}"
+    )
 
 
     # ==========================================

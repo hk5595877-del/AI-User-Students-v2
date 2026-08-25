@@ -775,97 +775,56 @@ account_type = st.session_state.get(
     "account_type",
     "student"
 )
-
 # ==========================================
-# STUDENT NAVIGATION
+# LEFT SIDEBAR NAVIGATION
 # ==========================================
 
-if account_type == "student":
+with st.sidebar:
 
-    nav_col1, nav_col2, nav_col3 = st.columns(
-        [1, 1, 1]
-    )
+    st.header("📚 Navigation")
 
-    with nav_col1:
+    if st.button(
+        "🏠 Home",
+        use_container_width=True
+    ):
+        st.session_state.current_page = "Home"
+        st.rerun()
 
-        if st.button(
-            "🏠 Home",
-            use_container_width=True
-        ):
-
-            st.session_state.current_page = "Home"
-            st.rerun()
-
-    with nav_col2:
+    if account_type == "student":
 
         if st.button(
             "🎓 GPA Predictor",
             use_container_width=True
         ):
-
             st.session_state.current_page = "GPA Predictor"
             st.rerun()
 
-    with nav_col3:
-
-        if st.button(
-            "🚪 Logout",
-            use_container_width=True
-        ):
-
-            supabase.auth.sign_out()
-
-            st.session_state.user = None
-            st.session_state.account_type = None
-            st.session_state.current_page = "Home"
-
-            st.rerun()
-
-
-# ==========================================
-# INSTITUTE NAVIGATION
-# ==========================================
-
-else:
-
-    nav_col1, nav_col2, nav_col3 = st.columns(
-        [1, 1, 1]
-    )
-
-    with nav_col1:
-
-        if st.button(
-            "🏠 Home",
-            use_container_width=True
-        ):
-
-            st.session_state.current_page = "Home"
-            st.rerun()
-
-    with nav_col2:
+    elif account_type == "institute":
 
         if st.button(
             "🏫 Institute Predictor",
             use_container_width=True
         ):
-
             st.session_state.current_page = "Institute Predictor"
             st.rerun()
 
-    with nav_col3:
+    st.divider()
 
-        if st.button(
-            "🚪 Logout",
-            use_container_width=True
-        ):
+    if st.button(
+        "🚪 Logout",
+        use_container_width=True
+    ):
 
-            supabase.auth.sign_out()
+        supabase.auth.sign_out()
 
-            st.session_state.user = None
-            st.session_state.account_type = None
-            st.session_state.current_page = "Home"
+        st.session_state.user = None
+        st.session_state.account_type = None
+        st.session_state.current_page = "Home"
 
-            st.rerun()
+        st.rerun()
+
+
+   
 
 
 st.divider()

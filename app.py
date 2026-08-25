@@ -476,55 +476,274 @@ def show_auth_page():
 
 def show_home_page():
 
-    st.title("🎓 StudentGPA AI")
+    # Get logged-in user's account type
+    account_type = st.session_state.get(
+        "account_type",
+        "student"
+    )
+
+    # Try to get the user's name from Supabase
+    full_name = "User"
+
+    try:
+        if st.session_state.user:
+
+            user_id = st.session_state.user.id
+
+            profile_response = (
+                supabase
+                .table("profiles")
+                .select("full_name, account_type")
+                .eq("id", user_id)
+                .single()
+                .execute()
+            )
+
+            if profile_response.data:
+
+                full_name = (
+                    profile_response.data.get(
+                        "full_name"
+                    )
+                    or "User"
+                )
+
+                account_type = (
+                    profile_response.data.get(
+                        "account_type"
+                    )
+                    or account_type
+                )
+
+    except Exception:
+        pass
+
+
+    # ==========================================
+    # WELCOME SECTION
+    # ==========================================
+
+    st.title(
+        f"👋 Welcome, {full_name}!"
+    )
+
+    if account_type == "student":
+
+        st.caption(
+            "🎓 Student Account"
+        )
+
+    else:
+
+        st.caption(
+            "🏫 Institute Account"
+        )
+
 
     st.subheader(
         "AI-Powered Student GPA & GenAI Impact Predictor"
     )
 
     st.write(
-        "Welcome to StudentGPA AI — an AI-powered platform "
-        "designed to help students understand and predict "
-        "their academic performance."
+        "StudentGPA AI helps you understand your academic "
+        "performance by combining academic information, "
+        "study habits, and Generative AI usage."
     )
 
     st.write(
-        "The platform uses academic information, study habits, "
-        "and Generative AI usage to estimate post-semester GPA "
-        "and provide useful academic insights."
+        "Use our machine-learning system to estimate your "
+        "post-semester GPA and receive useful educational "
+        "guidance based on your profile."
     )
+
+
+    # ==========================================
+    # START PREDICTION
+    # ==========================================
 
     st.divider()
 
-    st.subheader("✨ What can you do?")
+    st.subheader(
+        "🚀 Ready to explore your academic performance?"
+    )
+
+    st.write(
+        "Enter your academic and study information to "
+        "receive an estimated post-semester GPA."
+    )
+
+    if st.button(
+        "🚀 Start GPA Prediction",
+        type="primary",
+        use_container_width=True
+    ):
+
+        st.session_state.current_page = "GPA Predictor"
+        st.rerun()
+
+
+    # ==========================================
+    # FEATURES
+    # ==========================================
+
+    st.divider()
+
+    st.subheader(
+        "✨ What can StudentGPA AI do?"
+    )
 
     col1, col2, col3 = st.columns(3)
 
     with col1:
-        st.markdown("### 🎓 GPA Prediction")
+
+        st.markdown(
+            "### 🎓 GPA Prediction"
+        )
+
         st.write(
             "Estimate your post-semester GPA using "
-            "your academic and study information."
+            "your academic performance and study profile."
         )
+
 
     with col2:
-        st.markdown("### 🤖 GenAI Impact")
-        st.write(
-            "Explore how your use of Generative AI "
-            "relates to your academic performance."
+
+        st.markdown(
+            "### 🤖 GenAI Impact"
         )
 
+        st.write(
+            "Explore how your Generative AI usage "
+            "relates to your academic profile."
+        )
+
+
     with col3:
-        st.markdown("### 📊 Academic Insights")
+
+        st.markdown(
+            "### 📊 Academic Insights"
+        )
+
         st.write(
             "Understand important factors that may "
             "influence your predicted GPA."
         )
 
+
+    # ==========================================
+    # HOW IT WORKS
+    # ==========================================
+
     st.divider()
 
-    st.info(
-        "Use the GPA Predictor tab above to start your prediction."
+    st.subheader(
+        "🔍 How StudentGPA AI Works"
+    )
+
+    step1, step2, step3, step4 = st.columns(4)
+
+    with step1:
+
+        st.markdown(
+            "### 1️⃣"
+        )
+
+        st.markdown(
+            "**Enter your profile**"
+        )
+
+        st.write(
+            "Provide your academic information "
+            "and study habits."
+        )
+
+
+    with step2:
+
+        st.markdown(
+            "### 2️⃣"
+        )
+
+        st.markdown(
+            "**Describe your GenAI usage**"
+        )
+
+        st.write(
+            "Tell us how you use Generative AI "
+            "for your academic activities."
+        )
+
+
+    with step3:
+
+        st.markdown(
+            "### 3️⃣"
+        )
+
+        st.markdown(
+            "**Get your prediction**"
+        )
+
+        st.write(
+            "Our machine-learning model estimates "
+            "your post-semester GPA."
+        )
+
+
+    with step4:
+
+        st.markdown(
+            "### 4️⃣"
+        )
+
+        st.markdown(
+            "**Understand your results**"
+        )
+
+        st.write(
+            "Receive general educational guidance "
+            "based on your profile."
+        )
+
+
+    # ==========================================
+    # WHY USE STUDENTGPA AI
+    # ==========================================
+
+    st.divider()
+
+    st.subheader(
+        "💡 Why use StudentGPA AI?"
+    )
+
+    st.write(
+        "StudentGPA AI is designed to help students "
+        "better understand their academic habits and "
+        "make more informed study decisions."
+    )
+
+    st.markdown(
+        """
+        - 📈 Understand your academic trajectory
+        - 🤖 Explore your GenAI usage
+        - 📚 Identify study habits that may need attention
+        - 🧠 Receive general educational guidance
+        """
+    )
+
+
+    # ==========================================
+    # DISCLAIMER
+    # ==========================================
+
+    st.divider()
+
+    st.warning(
+        "⚠️ Educational tool only: GPA predictions are "
+        "estimates generated by a machine-learning model. "
+        "They are not official academic decisions, "
+        "admission decisions, or guarantees of future "
+        "academic performance."
     )
 
 

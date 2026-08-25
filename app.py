@@ -485,8 +485,12 @@ def show_home_page():
     # Try to get the user's name from Supabase
 def show_home_page():
 
-    # Try to get the user's name from Supabase
+    # Try to get the user's profile from Supabase
     full_name = "User"
+    account_type = st.session_state.get(
+        "account_type",
+        "student"
+    )
 
     try:
 

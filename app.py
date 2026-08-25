@@ -483,9 +483,10 @@ def show_home_page():
     )
 
     # Try to get the user's name from Supabase
-    full_name = "User"
+       full_name = "User"
 
     try:
+
         if st.session_state.user:
 
             user_id = st.session_state.user.id
@@ -495,27 +496,28 @@ def show_home_page():
                 .table("profiles")
                 .select("full_name, account_type")
                 .eq("id", user_id)
-                .maybe_single()
                 .execute()
             )
-            
-             if profile_response.data:
 
-            full_name = (
-                profile_response.data.get("full_name")
-                or "User"
-            )
+            if profile_response.data:
 
-            account_type = (
-                profile_response.data.get("account_type")
-                or account_type
-            )
+                profile = profile_response.data[0]
 
-except Exception as e:
+                full_name = (
+                    profile.get("full_name")
+                    or "User"
+                )
 
-    st.error(
-        f"Profile loading error: {e}"
-    ) 
+                account_type = (
+                    profile.get("account_type")
+                    or "student"
+                )
+
+    except Exception as e:
+
+        st.error(
+            f"Profile loading error: {e}"
+        )
 
     # ==========================================
     # WELCOME SECTION

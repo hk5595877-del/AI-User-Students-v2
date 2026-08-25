@@ -483,7 +483,10 @@ def show_home_page():
     )
 
     # Try to get the user's name from Supabase
-       full_name = "User"
+      def show_home_page():
+
+    # Try to get the user's name from Supabase
+    full_name = "User"
 
     try:
 

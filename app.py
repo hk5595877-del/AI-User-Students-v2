@@ -4,6 +4,28 @@ import joblib
 import numpy as np
 import pandas as pd
 import streamlit as st
+from supabase import create_client
+# ==========================================
+# SUPABASE CONNECTION
+# ==========================================
+
+SUPABASE_URL = st.secrets["SUPABASE_URL"]
+SUPABASE_KEY = st.secrets["SUPABASE_KEY"]
+
+supabase = create_client(SUPABASE_URL, SUPABASE_KEY)
+
+# ==========================================
+# AUTHENTICATION STATE
+# ==========================================
+
+if "user" not in st.session_state:
+    st.session_state.user = None
+
+if "account_type" not in st.session_state:
+    st.session_state.account_type = None
+
+if "auth_page" not in st.session_state:
+    st.session_state.auth_page = "home"
 
 # ==========================================
 # GOOGLE ANALYTICS

@@ -486,7 +486,7 @@ def show_home_page():
 def show_home_page():
 
     # Try to get the user's profile from Supabase
-    full_name = "Test"
+    full_name = "User"
     account_type = st.session_state.get(
         "account_type",
         "student"
@@ -505,6 +505,7 @@ def show_home_page():
                 .eq("id", user_id)
                 .execute()
             )
+            st.write("DEBUG PROFILE:", profile_response.data)
 
             if profile_response.data:
 

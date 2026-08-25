@@ -544,19 +544,22 @@ if st.session_state.user is None:
 if "current_page" not in st.session_state:
     st.session_state.current_page = "Home"
 
-nav_col1, nav_col2, nav_col3 = st.columns([1, 1, 1])
+with st.sidebar:
 
-with nav_col1:
+    st.title("🎓 StudentGPA AI")
+
+    st.divider()
+
     if st.button("🏠 Home", use_container_width=True):
         st.session_state.current_page = "Home"
         st.rerun()
 
-with nav_col2:
     if st.button("🎓 GPA Predictor", use_container_width=True):
         st.session_state.current_page = "GPA Predictor"
         st.rerun()
 
-with nav_col3:
+    st.divider()
+
     if st.button("🚪 Logout", use_container_width=True):
         supabase.auth.sign_out()
         st.session_state.user = None

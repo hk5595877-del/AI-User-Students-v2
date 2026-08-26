@@ -963,6 +963,63 @@ def show_institute_predictor(model):
             f"❌ Prediction failed: {e}"
         )
 # ==========================================
+# SSC / HSSC AI COACH
+# ==========================================
+
+def percentage_coach_text(percentage):
+
+    if percentage < 55:
+        return (
+            "Your percentage is very low. You need to improve your "
+            "academic performance. Focus on your weak subjects, study "
+            "consistently, and practice regularly."
+        )
+
+    elif percentage < 60:
+        return (
+            "Your percentage is below average. You should increase "
+            "your study effort and focus on improving your weaker subjects."
+        )
+
+    elif percentage < 65:
+        return (
+            "Your percentage is fair, but there is room for improvement. "
+            "Try to strengthen your weak areas and maintain consistent "
+            "study habits."
+        )
+
+    elif percentage < 70:
+        return (
+            "Your percentage is good. Keep working consistently and "
+            "focus on improving your weaker subjects."
+        )
+
+    elif percentage < 75:
+        return (
+            "Your percentage is very good. Maintain your study routine "
+            "and continue working toward a higher score."
+        )
+
+    elif percentage < 80:
+        return (
+            "Excellent performance! Keep maintaining your current study "
+            "habits and continue pushing yourself."
+        )
+
+    elif percentage < 85:
+        return (
+            "Outstanding performance! Your percentage is very strong. "
+            "Keep up your consistency and aim even higher."
+        )
+
+    else:
+        return (
+            "Excellent! You are performing at the highest level of "
+            "this prediction scale. Keep maintaining your strong "
+            "academic habits."
+        )
+
+# ==========================================
 # STUDENT SSC / HSSC PREDICTOR
 # ==========================================
 
@@ -1501,61 +1558,6 @@ def coach_text(prediction):
     )
 
     return messages
-
-
-def percentage_coach_text(percentage):
-
-    if percentage < 55:
-        return (
-            "Your percentage is very low. You need to improve your "
-            "academic performance. Focus on your weak subjects, study "
-            "consistently, and practice regularly."
-        )
-
-    elif percentage < 60:
-        return (
-            "Your percentage is below average. You should increase "
-            "your study effort and focus on improving your weaker subjects."
-        )
-
-    elif percentage < 65:
-        return (
-            "Your percentage is fair, but there is room for improvement. "
-            "Try to strengthen your weak areas and maintain consistent "
-            "study habits."
-        )
-
-    elif percentage < 70:
-        return (
-            "Your percentage is good. Keep working consistently and "
-            "focus on improving your weaker subjects."
-        )
-
-    elif percentage < 75:
-        return (
-            "Your percentage is very good. Maintain your study routine "
-            "and continue working toward a higher score."
-        )
-
-    elif percentage < 80:
-        return (
-            "Excellent performance! Keep maintaining your current study "
-            "habits and continue pushing yourself."
-        )
-
-    elif percentage < 85:
-        return (
-            "Outstanding performance! Your percentage is very strong. "
-            "Keep up your consistency and aim even higher."
-        )
-
-    else:
-        return (
-            "Excellent! You are performing at the highest level of "
-            "this prediction scale. Keep maintaining your strong "
-            "academic habits."
-        )
-
 
 # ==========================================
 # STUDENT PREDICTION

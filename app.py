@@ -254,19 +254,17 @@ def show_auth_page():
         "Choose the account type that matches you."
     )
 
-    auth_option = st.radio(
-        "Choose an option",
+    sign_in, sign_up = st.tabs(
         ["🔐 Sign In", "📝 Create Account"],
-        horizontal=True
     )
 
     st.divider()
 
     # ==========================================
-    # CREATE ACCOUNT
+    # CREATE ACCOUNT tab.
     # ==========================================
 
-    if auth_option == "📝 Create Account":
+    with sign_up:
 
         st.subheader("Create your account")
 
@@ -380,10 +378,10 @@ def show_auth_page():
                     )
 
     # ==========================================
-    # SIGN IN
+     # SIGN IN tab.
     # ==========================================
 
-    else:
+    with  Sign_In:
 
         st.subheader("Sign in to your account")
 

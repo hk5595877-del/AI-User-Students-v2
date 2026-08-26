@@ -1339,7 +1339,7 @@ if st.button(
     )
 
 
-st.divider()  
+    st.divider()  
 
     st.caption(
         "The coach provides general educational guidance from the entered profile. "

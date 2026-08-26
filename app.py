@@ -736,7 +736,7 @@ def show_institute_predictor(model):
 
     if uploaded_file is None:
         st.write(
-            "Upload a CSV file to begin."
+            "⚠️Upload a CSV file to begin."
         )
         return
 

@@ -753,7 +753,165 @@ def show_home_page():
         "admission decisions, or guarantees of future "
         "academic performance."
     )
+# ==========================================
+# INSTITUTE CSV PREDICTOR
+# ==========================================
 
+def show_institute_predictor(model):
+
+    st.title("🏫 Institute GPA Prediction")
+
+    st.write(
+        "Upload a CSV file containing student academic information "
+        "to generate GPA predictions for multiple students."
+    )
+
+    st.info(
+        "Maximum 50 students per upload."
+    )
+
+    uploaded_file = st.file_uploader(
+        "📂 Upload Student CSV",
+        type=["csv"]
+    )
+
+    if uploaded_file is None:
+        st.write(
+            "Upload a CSV file to begin."
+        )
+        return
+
+    try:
+
+        students_df = pd.read_csv(uploaded_file)
+
+    except Exception as e:
+
+        st.error(
+            f"Unable to read the CSV file: {e}"
+        )
+        return
+
+    # ==========================================
+    # CHECK STUDENT LIMIT
+    # ==========================================
+
+    if len(students_df) > 50:
+
+        st.error(
+            "❌ The CSV file contains more than 50 students. "
+            "The maximum allowed is 50 students."
+        )
+
+        return
+
+    if len(students_df) == 0:
+
+        st.error(
+            "❌ The uploaded CSV file is empty."
+        )
+
+        return
+
+    st.success(
+        f"✅ {len(students_df)} student(s) loaded successfully."
+    )
+
+    # ==========================================
+    # REQUIRED COLUMNS
+    # ==========================================
+
+    required_columns = [
+        "Major_Category",
+        "Year_of_Study",
+        "Pre_Semester_GPA",
+        "Weekly_GenAI_Hours",
+        "Primary_Use_Case",
+        "Prompt_Engineering_Skill",
+        "Tool_Diversity",
+        "Paid_Subscription",
+        "Traditional_Study_Hours",
+        "Perceived_AI_Dependency",
+        "Institutional_Policy",
+        "Anxiety_Level_During_Exams",
+    ]
+
+    missing_columns = [
+        column
+        for column in required_columns
+        if column not in students_df.columns
+    ]
+
+    if missing_columns:
+
+        st.error(
+            "❌ Your CSV is missing the following required columns:"
+        )
+
+        for column in missing_columns:
+            st.write(f"- `{column}`")
+
+        return
+
+    # ==========================================
+    # RUN PREDICTIONS
+    # ==========================================
+
+    try:
+
+        prediction_df = students_df.copy()
+
+        predictions = model.predict(
+            prediction_df[required_columns]
+        )
+
+        predictions = np.clip(
+            predictions,
+            0.0,
+            4.0
+        )
+
+        prediction_df[
+            "Predicted_Post_Semester_GPA"
+        ] = np.round(
+            predictions,
+            2
+        )
+
+        # ==========================================
+        # DISPLAY RESULTS
+        # ==========================================
+
+        st.subheader(
+            "📊 GPA Prediction Results"
+        )
+
+        st.dataframe(
+            prediction_df,
+            use_container_width=True
+        )
+
+        # ==========================================
+        # DOWNLOAD RESULTS
+        # ==========================================
+
+        csv_data = prediction_df.to_csv(
+            index=False
+        ).encode("utf-8")
+
+        st.download_button(
+            label="⬇️ Download Prediction Results",
+            data=csv_data,
+            file_name="institute_gpa_predictions.csv",
+            mime="text/csv",
+            use_container_width=True
+        )
+
+    except Exception as e:
+
+        st.error(
+            f"❌ Prediction failed: {e}"
+        )
 
 # ==========================================
 # PROTECT THE MAIN APPLICATION
@@ -922,165 +1080,7 @@ with col3:
         ["Strict_Ban", "Allowed_With_Citation", "Actively_Encouraged"],
     )
     anxiety = st.slider("😰 Exam anxiety", 1, 10, 5)
-# ==========================================
-# INSTITUTE CSV PREDICTOR
-# ==========================================
 
-def show_institute_predictor(model):
-
-    st.title("🏫 Institute GPA Prediction")
-
-    st.write(
-        "Upload a CSV file containing student academic information "
-        "to generate GPA predictions for multiple students."
-    )
-
-    st.info(
-        "Maximum 50 students per upload."
-    )
-
-    uploaded_file = st.file_uploader(
-        "📂 Upload Student CSV",
-        type=["csv"]
-    )
-
-    if uploaded_file is None:
-        st.write(
-            "Upload a CSV file to begin."
-        )
-        return
-
-    try:
-
-        students_df = pd.read_csv(uploaded_file)
-
-    except Exception as e:
-
-        st.error(
-            f"Unable to read the CSV file: {e}"
-        )
-        return
-
-    # ==========================================
-    # CHECK STUDENT LIMIT
-    # ==========================================
-
-    if len(students_df) > 50:
-
-        st.error(
-            "❌ The CSV file contains more than 50 students. "
-            "The maximum allowed is 50 students."
-        )
-
-        return
-
-    if len(students_df) == 0:
-
-        st.error(
-            "❌ The uploaded CSV file is empty."
-        )
-
-        return
-
-    st.success(
-        f"✅ {len(students_df)} student(s) loaded successfully."
-    )
-
-    # ==========================================
-    # REQUIRED COLUMNS
-    # ==========================================
-
-    required_columns = [
-        "Major_Category",
-        "Year_of_Study",
-        "Pre_Semester_GPA",
-        "Weekly_GenAI_Hours",
-        "Primary_Use_Case",
-        "Prompt_Engineering_Skill",
-        "Tool_Diversity",
-        "Paid_Subscription",
-        "Traditional_Study_Hours",
-        "Perceived_AI_Dependency",
-        "Institutional_Policy",
-        "Anxiety_Level_During_Exams",
-    ]
-
-    missing_columns = [
-        column
-        for column in required_columns
-        if column not in students_df.columns
-    ]
-
-    if missing_columns:
-
-        st.error(
-            "❌ Your CSV is missing the following required columns:"
-        )
-
-        for column in missing_columns:
-            st.write(f"- `{column}`")
-
-        return
-
-    # ==========================================
-    # RUN PREDICTIONS
-    # ==========================================
-
-    try:
-
-        prediction_df = students_df.copy()
-
-        predictions = model.predict(
-            prediction_df[required_columns]
-        )
-
-        predictions = np.clip(
-            predictions,
-            0.0,
-            4.0
-        )
-
-        prediction_df[
-            "Predicted_Post_Semester_GPA"
-        ] = np.round(
-            predictions,
-            2
-        )
-
-        # ==========================================
-        # DISPLAY RESULTS
-        # ==========================================
-
-        st.subheader(
-            "📊 GPA Prediction Results"
-        )
-
-        st.dataframe(
-            prediction_df,
-            use_container_width=True
-        )
-
-        # ==========================================
-        # DOWNLOAD RESULTS
-        # ==========================================
-
-        csv_data = prediction_df.to_csv(
-            index=False
-        ).encode("utf-8")
-
-        st.download_button(
-            label="⬇️ Download Prediction Results",
-            data=csv_data,
-            file_name="institute_gpa_predictions.csv",
-            mime="text/csv",
-            use_container_width=True
-        )
-
-    except Exception as e:
-
-        st.error(
-            f"❌ Prediction failed: {e}"
-        )
 #-------------------------------
   #Student Prediction.
 #--------------------------------

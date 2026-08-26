@@ -728,8 +728,6 @@ def show_institute_predictor(model):
     st.caption(
     "⚠️ Your CSV must contain these exact columns:"
     )
-
-    st.code(
     "Major_Category, "
     "Year_of_Study, "
     "Pre_Semester_GPA, "
@@ -743,7 +741,7 @@ def show_institute_predictor(model):
     "Institutional_Policy, "
     "Anxiety_Level_During_Exams",
     language="text"
-)
+
 
     if uploaded_file is None:
         st.write(

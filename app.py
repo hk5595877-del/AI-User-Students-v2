@@ -542,7 +542,7 @@ def show_home_page():
             use_container_width=True
         ):
 
-            st.session_state.current_page = "GPA Predictor"
+            st.session_state.current_page = "University Prediction"
 
             st.rerun()
 
@@ -898,6 +898,10 @@ with st.sidebar:
 
     st.header("📚 Navigation")
 
+    # ==========================================
+    # HOME
+    # ==========================================
+
     if st.button(
         "🏠 Home",
         use_container_width=True
@@ -905,31 +909,38 @@ with st.sidebar:
         st.session_state.current_page = "Home"
         st.rerun()
 
-    if account_type == "student":
+    # ==========================================
+    # SSC / HSSC PREDICTION
+    # ==========================================
 
-        if st.button(
-            "🎓 GPA Predictor",
-            use_container_width=True
-        ):
-            st.session_state.current_page = "GPA Predictor"
-            st.rerun()
+    if st.button(
+        "📊 SSC / HSSC Prediction",
+        use_container_width=True
+    ):
+        st.session_state.current_page = "SSC / HSSC Prediction"
+        st.rerun()
 
-    elif account_type == "institute":
+    # ==========================================
+    # UNIVERSITY PREDICTION
+    # ==========================================
 
-        if st.button(
-            "🏫 Institute Predictor",
-            use_container_width=True
-        ):
-            st.session_state.current_page = "Institute Predictor"
-            st.rerun()
+    if st.button(
+        "🎓 University Prediction",
+        use_container_width=True
+    ):
+        st.session_state.current_page = "University Prediction"
+        st.rerun()
 
     st.divider()
+
+    # ==========================================
+    # LOGOUT
+    # ==========================================
 
     if st.button(
         "🚪 Logout",
         use_container_width=True
     ):
-
         supabase.auth.sign_out()
 
         st.session_state.user = None
@@ -937,10 +948,6 @@ with st.sidebar:
         st.session_state.current_page = "Home"
 
         st.rerun()
-
-
-   
-
 
 st.divider()
 

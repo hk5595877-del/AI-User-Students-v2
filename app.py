@@ -63,6 +63,99 @@ ga_component = st.components.v2.component(
 )
 
 ga_component(key="google_analytics")
+# ==========================================
+# SSC / HSSC GPA ↔ PERCENTAGE CONVERSION
+# ==========================================
+
+GPA_PERCENTAGE_SCALE = [
+    (50.0, 0.0),
+    (55.0, 0.5),
+    (60.0, 1.0),
+    (65.0, 1.5),
+    (70.0, 2.0),
+    (75.0, 3.0),
+    (80.0, 3.5),
+    (85.0, 4.0),
+]
+
+
+def percentage_to_gpa(percentage):
+    """
+    Convert SSC/HSSC percentage to GPA
+    using linear interpolation between
+    the defined percentage/GPA points.
+    """
+
+    percentage = float(percentage)
+
+    # Below minimum
+    if percentage <= GPA_PERCENTAGE_SCALE[0][0]:
+        return GPA_PERCENTAGE_SCALE[0][1]
+
+    # Above maximum
+    if percentage >= GPA_PERCENTAGE_SCALE[-1][0]:
+        return GPA_PERCENTAGE_SCALE[-1][1]
+
+    for i in range(len(GPA_PERCENTAGE_SCALE) - 1):
+
+        lower_percentage, lower_gpa = GPA_PERCENTAGE_SCALE[i]
+        upper_percentage, upper_gpa = GPA_PERCENTAGE_SCALE[i + 1]
+
+        if lower_percentage <= percentage <= upper_percentage:
+
+            ratio = (
+                (percentage - lower_percentage)
+                / (upper_percentage - lower_percentage)
+            )
+
+            gpa = (
+                lower_gpa
+                + ratio * (upper_gpa - lower_gpa)
+            )
+
+            return round(gpa, 2)
+
+    return 1.0
+
+
+def gpa_to_percentage(gpa):
+    """
+    Convert predicted GPA to SSC/HSSC percentage
+    using linear interpolation between
+    the defined GPA/percentage points.
+    """
+
+    gpa = float(gpa)
+
+    # Below minimum
+    if gpa <= GPA_PERCENTAGE_SCALE[0][1]:
+        return GPA_PERCENTAGE_SCALE[0][0]
+
+    # Above maximum
+    if gpa >= GPA_PERCENTAGE_SCALE[-1][1]:
+        return GPA_PERCENTAGE_SCALE[-1][0]
+
+    for i in range(len(GPA_PERCENTAGE_SCALE) - 1):
+
+        lower_percentage, lower_gpa = GPA_PERCENTAGE_SCALE[i]
+        upper_percentage, upper_gpa = GPA_PERCENTAGE_SCALE[i + 1]
+
+        if lower_gpa <= gpa <= upper_gpa:
+
+            ratio = (
+                (gpa - lower_gpa)
+                / (upper_gpa - lower_gpa)
+            )
+
+            percentage = (
+                lower_percentage
+                + ratio
+                * (upper_percentage - lower_percentage)
+            )
+
+            return round(percentage, 2)
+
+    return 50.0
 
 APP_DIR = Path(__file__).resolve().parent
 MODEL_PATH = APP_DIR / "model.joblib"

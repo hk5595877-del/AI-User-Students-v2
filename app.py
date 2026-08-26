@@ -962,6 +962,259 @@ def show_institute_predictor(model):
         st.error(
             f"❌ Prediction failed: {e}"
         )
+# ==========================================
+# STUDENT SSC / HSSC PREDICTOR
+# ==========================================
+
+def show_student_ssc_hssc_predictor(model):
+
+    st.title("📊 SSC / HSSC Percentage Prediction")
+
+    st.caption(
+        "Predict your SSC / HSSC percentage using your academic, "
+        "study, and GenAI-usage profile."
+    )
+
+    st.info(
+        "For SSC / HSSC prediction, enter your previous academic "
+        "performance as a percentage (%). The percentage is converted "
+        "internally to GPA for the prediction model."
+    )
+
+    # ==========================================
+    # STUDENT PROFILE
+    # ==========================================
+
+    st.subheader("Student Profile")
+
+    col1, col2, col3 = st.columns(3)
+
+    with col1:
+
+        major = st.selectbox(
+            "🎓 Major",
+            [
+                "Humanities",
+                "Medical",
+                "Business",
+                "STEM",
+                "Arts"
+            ],
+            key="ssc_major"
+        )
+
+        year = st.selectbox(
+            "📚 Year of Study",
+            [
+                "Freshman",
+                "Sophomore",
+                "Junior",
+                "Senior",
+                "Graduate"
+            ],
+            key="ssc_year"
+        )
+
+        previous_percentage = st.number_input(
+            "📊 Previous Percentage (%)",
+            min_value=0.0,
+            max_value=100.0,
+            value=75.0,
+            step=0.01,
+            key="ssc_previous_percentage"
+        )
+
+        traditional_hours = st.number_input(
+            "📖 Traditional Study Hours / Week",
+            min_value=0.0,
+            max_value=100.0,
+            value=10.0,
+            step=0.5,
+            key="ssc_traditional_hours"
+        )
+
+    with col2:
+
+        genai_hours = st.number_input(
+            "🤖 GenAI Hours / Week",
+            min_value=0.0,
+            max_value=100.0,
+            value=5.0,
+            step=0.5,
+            key="ssc_genai_hours"
+        )
+
+        use_case = st.selectbox(
+            "🛠️ Primary GenAI Use Case",
+            [
+                "Copywriting/Drafting",
+                "Ideation",
+                "Summarizing_Reading",
+                "Debugging/Troubleshooting",
+                "Direct_Answer_Generation"
+            ],
+            key="ssc_use_case"
+        )
+
+        prompt_skill = st.selectbox(
+            "🧠 Prompt-Engineering Skill",
+            [
+                "Beginner",
+                "Intermediate",
+                "Advanced"
+            ],
+            key="ssc_prompt_skill"
+        )
+
+        tool_diversity = st.slider(
+            "🧩 GenAI Tool Diversity",
+            1,
+            5,
+            2,
+            key="ssc_tool_diversity"
+        )
+
+    with col3:
+
+        paid = st.selectbox(
+            "💳 Paid GenAI Subscription",
+            ["No", "Yes"],
+            key="ssc_paid"
+        )
+
+        ai_dependency = st.slider(
+            "🔗 Perceived AI Dependency",
+            1,
+            10,
+            5,
+            key="ssc_ai_dependency"
+        )
+
+        policy = st.selectbox(
+            "🏫 Institutional GenAI Policy",
+            [
+                "Strict_Ban",
+                "Allowed_With_Citation",
+                "Actively_Encouraged"
+            ],
+            key="ssc_policy"
+        )
+
+        anxiety = st.slider(
+            "😰 Exam Anxiety",
+            1,
+            10,
+            5,
+            key="ssc_anxiety"
+        )
+
+    # ==========================================
+    # CONVERT PERCENTAGE → GPA
+    # ==========================================
+
+    input_gpa = percentage_to_gpa(
+        previous_percentage
+    )
+
+    st.caption(
+        f"Internal model GPA equivalent: {input_gpa:.2f}"
+    )
+
+    # ==========================================
+    # PREDICTION
+    # ==========================================
+
+    if st.button(
+        "🔮 Predict SSC / HSSC Percentage",
+        type="primary",
+        use_container_width=True
+    ):
+
+        features_df = pd.DataFrame([{
+
+            "Major_Category": major,
+
+            "Year_of_Study": year,
+
+            "Pre_Semester_GPA": input_gpa,
+
+            "Weekly_GenAI_Hours": genai_hours,
+
+            "Primary_Use_Case": use_case,
+
+            "Prompt_Engineering_Skill": prompt_skill,
+
+            "Tool_Diversity": tool_diversity,
+
+            "Paid_Subscription": paid == "Yes",
+
+            "Traditional_Study_Hours": traditional_hours,
+
+            "Perceived_AI_Dependency": ai_dependency,
+
+            "Institutional_Policy": policy,
+
+            "Anxiety_Level_During_Exams": anxiety,
+        }])
+
+        # Existing University model
+        predicted_gpa = float(
+            np.clip(
+                model.predict(features_df)[0],
+                0.0,
+                4.0
+            )
+        )
+
+        # Convert model GPA → SSC/HSSC percentage
+        predicted_percentage = gpa_to_percentage(
+            predicted_gpa
+        )
+
+        # ==========================================
+        # RESULTS
+        # ==========================================
+
+        st.divider()
+
+        st.subheader(
+            "📊 SSC / HSSC Prediction Result"
+        )
+
+        a, b = st.columns(2)
+
+        with a:
+
+            st.metric(
+                "Predicted Percentage",
+                f"{predicted_percentage:.2f}%"
+            )
+
+        with b:
+
+            st.metric(
+                "Estimated GPA Equivalent",
+                f"{predicted_gpa:.2f} / 4.00"
+            )
+
+        # ==========================================
+        # AI COACH
+        # ==========================================
+
+        st.subheader(
+            "🤖 AI Study Coach"
+        )
+
+        st.write(
+            "• " + percentage_coach_text(
+                predicted_percentage
+            )
+        )
+
+        st.caption(
+            "The prediction is an educational estimate and "
+            "should not be treated as an official SSC/HSSC result."
+        )
 
 # ==========================================
 # PROTECT THE MAIN APPLICATION

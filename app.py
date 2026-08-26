@@ -595,14 +595,13 @@ if account_type == "student":
         st.session_state.current_page = "GPA Predictor"
 
         st.rerun()
+ # ==========================================
+  # FEATURES
+ # ==========================================
 
-    # ==========================================
-    # FEATURES
-    # ==========================================
+st.divider()
 
-    st.divider()
-
-    st.subheader(
+ st.subheader(
         "✨ What can StudentGPA AI do?"
     )
 

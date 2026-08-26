@@ -1316,12 +1316,60 @@ metrics = load_metrics()
 # PAGE ROUTING
 # ==========================================
 
+# ==========================================
+# HOME
+# ==========================================
+
 if st.session_state.current_page == "Home":
 
     show_home_page()
 
     st.stop()
 
+
+# ==========================================
+# SSC / HSSC PREDICTION
+# ==========================================
+
+if st.session_state.current_page == "SSC / HSSC Prediction":
+
+    # --------------------------------------
+    # STUDENT ACCOUNT
+    # --------------------------------------
+
+    if account_type == "student":
+
+        show_student_ssc_hssc_predictor(model)
+
+        st.stop()
+
+    # --------------------------------------
+    # INSTITUTE ACCOUNT
+    # --------------------------------------
+
+    elif account_type == "institute":
+
+        st.info(
+            "🏫 The Institute SSC / HSSC batch predictor "
+            "will be added next."
+        )
+
+        st.stop()
+
+    else:
+
+        st.error(
+            "❌ Invalid account type."
+        )
+
+        st.session_state.current_page = "Home"
+
+        st.rerun()
+
+
+# ==========================================
+# UNIVERSITY PREDICTION — INSTITUTE
+# ==========================================
 
 if st.session_state.current_page == "Institute Predictor":
 

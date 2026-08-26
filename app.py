@@ -571,13 +571,19 @@ def show_home_page():
 
     st.divider()
 
+    # ==========================================
+# STUDENT GPA PREDICTION CTA
+# ==========================================
+
+if account_type == "student":
+
     st.subheader(
         "🚀 Ready to explore your academic performance?"
     )
 
     st.write(
-        "Enter your academic and study information to "
-        "receive an estimated post-semester GPA."
+        "Enter your academic and study information "
+        "to receive an estimated post-semester GPA."
     )
 
     if st.button(
@@ -587,8 +593,8 @@ def show_home_page():
     ):
 
         st.session_state.current_page = "GPA Predictor"
-        st.rerun()
 
+        st.rerun()
 
     # ==========================================
     # FEATURES

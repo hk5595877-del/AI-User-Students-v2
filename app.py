@@ -476,63 +476,21 @@ def show_auth_page():
 
 def show_home_page():
 
-    # Get logged-in user's account type
+    # ==========================================
+    # GET ACCOUNT TYPE
+    # ==========================================
+
     account_type = st.session_state.get(
         "account_type",
         "student"
     )
-
-    # Try to get the user's name from Supabase
-def show_home_page():
-
-    # Try to get the user's profile from Supabase
-    full_name = "User"
-    account_type = st.session_state.get(
-        "account_type",
-        "student"
-    )
-
-    try:
-
-        if st.session_state.user:
-
-            user_id = st.session_state.user.id
-
-            profile_response = (
-                supabase
-                .table("profiles")
-                .select("full_name, account_type")
-                .eq("id", user_id)
-                .execute()
-            )
-           
-
-            if profile_response.data:
-
-                profile = profile_response.data[0]
-
-                full_name = (
-                    profile.get("full_name")
-                    or "User"
-                )
-
-                account_type = (
-                    profile.get("account_type")
-                    or "student"
-                )
-
-    except Exception as e:
-
-        st.error(
-            f"Profile loading error: {e}"
-        )
 
     # ==========================================
     # WELCOME SECTION
     # ==========================================
 
     st.title(
-        f"👋 Welcome!"
+        "👋 Welcome!"
     )
 
     if account_type == "student":
@@ -546,7 +504,6 @@ def show_home_page():
         st.caption(
             "🏫 Institute Account"
         )
-
 
     st.subheader(
         "AI-Powered Student GPA & GenAI Impact Predictor"
@@ -564,44 +521,40 @@ def show_home_page():
         "guidance based on your profile."
     )
 
+    # ==========================================
+    # STUDENT GPA PREDICTION CTA
+    # ==========================================
+
+    if account_type == "student":
+
+        st.divider()
+
+        st.subheader(
+            "🚀 Ready to explore your academic performance?"
+        )
+
+        st.write(
+            "Enter your academic and study information "
+            "to receive an estimated post-semester GPA."
+        )
+
+        if st.button(
+            "🚀 Start GPA Prediction",
+            type="primary",
+            use_container_width=True
+        ):
+
+            st.session_state.current_page = "GPA Predictor"
+
+            st.rerun()
 
     # ==========================================
-    # START PREDICTION
+    # FEATURES
     # ==========================================
 
     st.divider()
 
-    # ==========================================
-# STUDENT GPA PREDICTION CTA
-# ==========================================
-
-if account_type == "student":
-
     st.subheader(
-        "🚀 Ready to explore your academic performance?"
-    )
-
-    st.write(
-        "Enter your academic and study information "
-        "to receive an estimated post-semester GPA."
-    )
-
-    if st.button(
-        "🚀 Start GPA Prediction",
-        type="primary",
-        use_container_width=True
-    ):
-
-        st.session_state.current_page = "GPA Predictor"
-
-        st.rerun()
- # ==========================================
-  # FEATURES
- # ==========================================
-
-st.divider()
-
- st.subheader(
         "✨ What can StudentGPA AI do?"
     )
 
@@ -618,7 +571,6 @@ st.divider()
             "your academic performance and study profile."
         )
 
-
     with col2:
 
         st.markdown(
@@ -630,7 +582,6 @@ st.divider()
             "relates to your academic profile."
         )
 
-
     with col3:
 
         st.markdown(
@@ -641,7 +592,6 @@ st.divider()
             "Understand important factors that may "
             "influence your predicted GPA."
         )
-
 
     # ==========================================
     # HOW IT WORKS
@@ -670,7 +620,6 @@ st.divider()
             "and study habits."
         )
 
-
     with step2:
 
         st.markdown(
@@ -685,7 +634,6 @@ st.divider()
             "Tell us how you use Generative AI "
             "for your academic activities."
         )
-
 
     with step3:
 
@@ -702,7 +650,6 @@ st.divider()
             "your post-semester GPA."
         )
 
-
     with step4:
 
         st.markdown(
@@ -717,7 +664,6 @@ st.divider()
             "Receive general educational guidance "
             "based on your profile."
         )
-
 
     # ==========================================
     # WHY USE STUDENTGPA AI
@@ -744,7 +690,6 @@ st.divider()
         """
     )
 
-
     # ==========================================
     # DISCLAIMER
     # ==========================================
@@ -758,6 +703,7 @@ st.divider()
         "admission decisions, or guarantees of future "
         "academic performance."
     )
+
 # ==========================================
 # INSTITUTE CSV PREDICTOR
 # ==========================================

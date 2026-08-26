@@ -1156,47 +1156,190 @@ def make_features():
         "Institutional_Policy": policy,
         "Anxiety_Level_During_Exams": anxiety,
     }])
-
 def coach_text(prediction):
     messages = []
+
     if pre_gpa < 2.5:
-        messages.append("Your starting GPA is the strongest area to focus on; consistent foundational study is important.")
+        messages.append(
+            "Your starting GPA is the strongest area to focus on; "
+            "consistent foundational study is important."
+        )
+
     if traditional_hours < 8:
-        messages.append("Consider increasing traditional study time gradually, especially before exams.")
+        messages.append(
+            "Consider increasing traditional study time gradually, "
+            "especially before exams."
+        )
+
     if genai_hours > traditional_hours:
-        messages.append("Your GenAI use exceeds your traditional study time. Use AI as a learning aid rather than a replacement for practice.")
+        messages.append(
+            "Your GenAI use exceeds your traditional study time. "
+            "Use AI as a learning aid rather than a replacement for practice."
+        )
+
     if ai_dependency >= 8:
-        messages.append("High AI dependency can be risky academically. Try solving problems independently before checking AI.")
+        messages.append(
+            "High AI dependency can be risky academically. "
+            "Try solving problems independently before checking AI."
+        )
+
     if anxiety >= 8:
-        messages.append("High exam anxiety may make preparation and practice tests especially valuable.")
+        messages.append(
+            "High exam anxiety may make preparation and practice tests "
+            "especially valuable."
+        )
+
     if not messages:
-        messages.append("Your profile is relatively balanced. Keep monitoring your study habits and use GenAI to reinforce learning.")
-    messages.append(f"The model estimates a post-semester GPA of about {prediction:.2f}.")
+        messages.append(
+            "Your profile is relatively balanced. Keep monitoring your "
+            "study habits and use GenAI to reinforce learning."
+        )
+
+    messages.append(
+        f"The model estimates a post-semester GPA of about {prediction:.2f}."
+    )
+
     return messages
 
-if st.button("🔮 Predict Post-Semester GPA", type="primary", use_container_width=True):
+
+def percentage_coach_text(percentage):
+
+    if percentage < 55:
+        return (
+            "Your percentage is very low. You need to improve your "
+            "academic performance. Focus on your weak subjects, study "
+            "consistently, and practice regularly."
+        )
+
+    elif percentage < 60:
+        return (
+            "Your percentage is below average. You should increase "
+            "your study effort and focus on improving your weaker subjects."
+        )
+
+    elif percentage < 65:
+        return (
+            "Your percentage is fair, but there is room for improvement. "
+            "Try to strengthen your weak areas and maintain consistent "
+            "study habits."
+        )
+
+    elif percentage < 70:
+        return (
+            "Your percentage is good. Keep working consistently and "
+            "focus on improving your weaker subjects."
+        )
+
+    elif percentage < 75:
+        return (
+            "Your percentage is very good. Maintain your study routine "
+            "and continue working toward a higher score."
+        )
+
+    elif percentage < 80:
+        return (
+            "Excellent performance! Keep maintaining your current study "
+            "habits and continue pushing yourself."
+        )
+
+    elif percentage < 85:
+        return (
+            "Outstanding performance! Your percentage is very strong. "
+            "Keep up your consistency and aim even higher."
+        )
+
+    else:
+        return (
+            "Excellent! You are performing at the highest level of "
+            "this prediction scale. Keep maintaining your strong "
+            "academic habits."
+        )
+
+
+# ==========================================
+# STUDENT PREDICTION
+# ==========================================
+
+if st.button(
+    "🔮 Predict Post-Semester GPA",
+    type="primary",
+    use_container_width=True
+):
+
     features_df = make_features()
-    prediction = float(np.clip(model.predict(features_df)[0], 0.0, 4.0))
+
+    prediction = float(
+        np.clip(
+            model.predict(features_df)[0],
+            0.0,
+            4.0
+        )
+    )
+
+    # Convert predicted GPA to percentage
+    predicted_percentage = gpa_to_percentage(prediction)
 
     st.divider()
-    a, b, c = st.columns(3)
+
+    a, b, c, d = st.columns(4)
+
     with a:
-        st.metric("Predicted Post-Semester GPA", f"{prediction:.2f} / 4.00")
+        st.metric(
+            "Predicted Post-Semester GPA",
+            f"{prediction:.2f} / 4.00"
+        )
+
     with b:
         change = prediction - pre_gpa
-        st.metric("Estimated change vs. starting GPA", f"{change:+.2f}")
+
+        st.metric(
+            "Estimated change vs. starting GPA",
+            f"{change:+.2f}"
+        )
+
     with c:
+
         if prediction >= 3.5:
             band = "Strong"
+
         elif prediction >= 3.0:
             band = "Moderate"
+
         else:
             band = "Needs attention"
-        st.metric("Prediction band", band)
+
+        st.metric(
+            "Prediction band",
+            band
+        )
+
+    with d:
+        st.metric(
+            "Equivalent Percentage",
+            f"{predicted_percentage:.2f}%"
+        )
+
+    # ==========================================
+    # AI STUDY COACH
+    # ==========================================
 
     st.subheader("🤖 AI Study Coach")
+
     for msg in coach_text(prediction):
         st.write("• " + msg)
+
+    st.write(
+        "• " + percentage_coach_text(predicted_percentage)
+    )
+
+    st.caption(
+        "The coach provides general educational guidance from the "
+        "entered profile. It does not diagnose students or make "
+        "institutional decisions."
+    )
+
+
+st.divider()  
 
     st.caption(
         "The coach provides general educational guidance from the entered profile. "

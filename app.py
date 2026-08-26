@@ -381,7 +381,7 @@ def show_auth_page():
      # SIGN IN tab.
     # ==========================================
 
-    with  Sign_In:
+    with  sign_in:
 
         st.subheader("Sign in to your account")
 

@@ -727,9 +727,9 @@ def show_institute_predictor(model):
     )
     st.caption(
     "⚠️ Your CSV must contain these exact columns:"
-)
+    )
 
-st.code(
+    st.code(
     "Major_Category, "
     "Year_of_Study, "
     "Pre_Semester_GPA, "

@@ -816,11 +816,11 @@ def show_institute_predictor(model):
 # CSV UPLOAD
 # ==========================================
 
-uploaded_file = st.file_uploader(
-    "📂 Upload SSC / HSSC Student CSV",
-    type=["csv"],
-    key="ssc_hssc_institute_csv"
-)
+    uploaded_file = st.file_uploader(
+        "📂 Upload SSC / HSSC Student CSV",
+        type=["csv"],
+        key="ssc_hssc_institute_csv"
+    )  
 
 # ==========================================
 # RE-PREDICT BUTTON

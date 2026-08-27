@@ -1015,11 +1015,10 @@ repredict = st.button(
 st.caption(
     "⚠️ Your CSV must contain these exact columns:"
     )
-
-    "(Major_Category, Year_of_Study, Previous_Percentage, Weekly_GenAI_Hours, Primary_Use_Case, Prompt_Engineering_Skill, "
-    "Tool_Diversity, Paid_Subscription, Traditional_Study_Hours, Perceived_AI_Dependency, Institutional_Policy,"
-    "Anxiety_Level_During_Exams)",
-    language="text"
+"(Major_Category, Year_of_Study, Previous_Percentage, Weekly_GenAI_Hours, Primary_Use_Case, Prompt_Engineering_Skill, "
+"Tool_Diversity, Paid_Subscription, Traditional_Study_Hours, Perceived_AI_Dependency, Institutional_Policy,"
+"Anxiety_Level_During_Exams)",
+language="text"
     
 
     if uploaded_file is None:

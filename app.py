@@ -844,7 +844,6 @@ if uploaded_file is None:
     st.write(
         "⚠️Upload a CSV file to begin."
         )
-    
     return
 
 try:

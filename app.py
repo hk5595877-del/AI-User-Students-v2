@@ -1147,6 +1147,20 @@ def show_institute_ssc_hssc_predictor(model):
         ].apply(
             percentage_to_gpa
         )
+        # ==========================================
+        # CONVERT CSV VALUES TO MODEL FORMAT
+        # ==========================================
+
+        prediction_df["Paid_Subscription"] = (
+            prediction_df["Paid_Subscription"]
+            .astype(str)
+            .str.strip()
+            .str.lower()
+            .map({
+                "yes": True,
+                "no": False
+    })
+)
 
         # --------------------------------------
         # Model Features

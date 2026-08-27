@@ -812,9 +812,23 @@ def show_institute_predictor(model):
         "Maximum 50 students per upload."
     )
 
-    uploaded_file = st.file_uploader(
-        "📂 Upload Student CSV",
-        type=["csv"]
+   # ==========================================
+   # CSV UPLOAD + RE-PREDICT
+   # ==========================================
+
+   uploaded_file = st.file_uploader(
+       "📂 Upload SSC / HSSC Student CSV",
+       type=["csv"],
+       key="ssc_hssc_institute_csv"
+   )
+
+   col_upload, col_repredict = st.columns([3, 1])
+
+   with col_repredict:
+
+      repredict = st.button(
+          "🔄 Re-predict",
+          use_container_width=True
     )
     st.caption(
     "⚠️ Your CSV must contain these exact columns:"
@@ -979,14 +993,23 @@ def show_institute_ssc_hssc_predictor(model):
         "Maximum 50 students per upload."
     )
 
-    # ==========================================
-    # CSV UPLOAD
-    # ==========================================
+   # ==========================================
+   # CSV UPLOAD + RE-PREDICT
+   # ==========================================
 
-    uploaded_file = st.file_uploader(
-        "📂 Upload SSC / HSSC Student CSV",
-        type=["csv"],
-        key="ssc_hssc_institute_csv"
+   uploaded_file = st.file_uploader(
+       "📂 Upload SSC / HSSC Student CSV",
+       type=["csv"],
+       key="ssc_hssc_institute_csv"
+    )
+
+   col_upload, col_repredict = st.columns([3, 1])
+
+   with col_repredict:
+
+      repredict = st.button(
+          "🔄 Re-predict",
+          use_container_width=True
     )
 
     st.caption(

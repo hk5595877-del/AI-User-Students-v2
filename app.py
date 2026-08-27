@@ -1703,14 +1703,11 @@ if st.session_state.current_page == "SSC / HSSC Prediction":
     # INSTITUTE ACCOUNT
     # --------------------------------------
 
-    elif account_type == "institute":
+   elif account_type == "institute":
 
-        st.info(
-            "🏫 The Institute SSC / HSSC batch predictor "
-            "will be added next."
-        )
+    show_institute_ssc_hssc_predictor(model)
 
-        st.stop()
+    st.stop()
 
     else:
 

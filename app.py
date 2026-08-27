@@ -801,7 +801,7 @@ def show_home_page():
 
 def show_institute_predictor(model):
 
-    st.title("🏫 Institute GPA Prediction")
+    st.title("🏫 University GPA Batch Prediction")
 
     st.write(
         "Upload a CSV file containing student academic information "

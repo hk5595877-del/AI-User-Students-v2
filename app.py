@@ -997,7 +997,7 @@ def show_institute_ssc_hssc_predictor(model):
     "Tool_Diversity, Paid_Subscription, Traditional_Study_Hours, Perceived_AI_Dependency, Institutional_Policy,"
     "Anxiety_Level_During_Exams)",
     language="text"
-    )
+    
 
     if uploaded_file is None:
 

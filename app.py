@@ -963,6 +963,305 @@ def show_institute_predictor(model):
             f"❌ Prediction failed: {e}"
         )
 # ==========================================
+# INSTITUTE SSC / HSSC CSV PREDICTOR
+# ==========================================
+
+def show_institute_ssc_hssc_predictor(model):
+
+    st.title("🏫 SSC / HSSC Batch Prediction")
+
+    st.write(
+        "Upload a CSV file containing SSC / HSSC student information "
+        "to generate percentage predictions for multiple students."
+    )
+
+    st.info(
+        "Maximum 50 students per upload."
+    )
+
+    # ==========================================
+    # CSV UPLOAD
+    # ==========================================
+
+    uploaded_file = st.file_uploader(
+        "📂 Upload SSC / HSSC Student CSV",
+        type=["csv"],
+        key="ssc_hssc_institute_csv"
+    )
+
+    st.caption(
+        "⚠️ Your CSV must contain these exact columns:"
+    )
+
+    st.code(
+        "Major_Category, "
+        "Year_of_Study, "
+        "Previous_Percentage, "
+        "Weekly_GenAI_Hours, "
+        "Primary_Use_Case, "
+        "Prompt_Engineering_Skill, "
+        "Tool_Diversity, "
+        "Paid_Subscription, "
+        "Traditional_Study_Hours, "
+        "Perceived_AI_Dependency, "
+        "Institutional_Policy, "
+        "Anxiety_Level_During_Exams",
+        language="text"
+    )
+
+    if uploaded_file is None:
+
+        st.write(
+            "⚠️ Upload a CSV file to begin."
+        )
+
+        return
+
+    # ==========================================
+    # READ CSV
+    # ==========================================
+
+    try:
+
+        students_df = pd.read_csv(
+            uploaded_file
+        )
+
+    except Exception as e:
+
+        st.error(
+            f"❌ Unable to read the CSV file: {e}"
+        )
+
+        return
+
+    # ==========================================
+    # STUDENT LIMIT
+    # ==========================================
+
+    if len(students_df) > 50:
+
+        st.error(
+            "❌ The CSV file contains more than 50 students. "
+            "The maximum allowed is 50 students."
+        )
+
+        return
+
+    if len(students_df) == 0:
+
+        st.error(
+            "❌ The uploaded CSV file is empty."
+        )
+
+        return
+
+    st.success(
+        f"✅ {len(students_df)} student(s) loaded successfully."
+    )
+
+    # ==========================================
+    # REQUIRED COLUMNS
+    # ==========================================
+
+    required_columns = [
+        "Major_Category",
+        "Year_of_Study",
+        "Previous_Percentage",
+        "Weekly_GenAI_Hours",
+        "Primary_Use_Case",
+        "Prompt_Engineering_Skill",
+        "Tool_Diversity",
+        "Paid_Subscription",
+        "Traditional_Study_Hours",
+        "Perceived_AI_Dependency",
+        "Institutional_Policy",
+        "Anxiety_Level_During_Exams",
+    ]
+
+    missing_columns = [
+        column
+        for column in required_columns
+        if column not in students_df.columns
+    ]
+
+    if missing_columns:
+
+        st.error(
+            "❌ Your CSV is missing the following required columns:"
+        )
+
+        for column in missing_columns:
+
+            st.write(
+                f"- `{column}`"
+            )
+
+        return
+
+    # ==========================================
+    # VALIDATE PERCENTAGE
+    # ==========================================
+
+    try:
+
+        students_df["Previous_Percentage"] = pd.to_numeric(
+            students_df["Previous_Percentage"],
+            errors="coerce"
+        )
+
+    except Exception:
+
+        st.error(
+            "❌ Previous_Percentage must contain numeric values."
+        )
+
+        return
+
+    if students_df["Previous_Percentage"].isna().any():
+
+        st.error(
+            "❌ Previous_Percentage contains empty or invalid values."
+        )
+
+        return
+
+    if (
+        (students_df["Previous_Percentage"] < 0)
+        |
+        (students_df["Previous_Percentage"] > 100)
+    ).any():
+
+        st.error(
+            "❌ Previous_Percentage must be between 0 and 100."
+        )
+
+        return
+
+    # ==========================================
+    # RUN PREDICTIONS
+    # ==========================================
+
+    try:
+
+        prediction_df = students_df.copy()
+
+        # --------------------------------------
+        # Percentage → GPA
+        # --------------------------------------
+
+        prediction_df[
+            "Pre_Semester_GPA"
+        ] = prediction_df[
+            "Previous_Percentage"
+        ].apply(
+            percentage_to_gpa
+        )
+
+        # --------------------------------------
+        # Model Features
+        # --------------------------------------
+
+        model_columns = [
+            "Major_Category",
+            "Year_of_Study",
+            "Pre_Semester_GPA",
+            "Weekly_GenAI_Hours",
+            "Primary_Use_Case",
+            "Prompt_Engineering_Skill",
+            "Tool_Diversity",
+            "Paid_Subscription",
+            "Traditional_Study_Hours",
+            "Perceived_AI_Dependency",
+            "Institutional_Policy",
+            "Anxiety_Level_During_Exams",
+        ]
+
+        predictions = model.predict(
+            prediction_df[model_columns]
+        )
+
+        predictions = np.clip(
+            predictions,
+            0.0,
+            4.0
+        )
+
+        # --------------------------------------
+        # Predicted GPA
+        # --------------------------------------
+
+        prediction_df[
+            "Predicted_GPA"
+        ] = np.round(
+            predictions,
+            2
+        )
+
+        # --------------------------------------
+        # GPA → Percentage
+        # --------------------------------------
+
+        prediction_df[
+            "Predicted_Percentage"
+        ] = prediction_df[
+            "Predicted_GPA"
+        ].apply(
+            gpa_to_percentage
+        )
+
+        prediction_df[
+            "Predicted_Percentage"
+        ] = prediction_df[
+            "Predicted_Percentage"
+        ].round(2)
+
+        
+# ==========================================
+# SHOW ONLY PERCENTAGE RESULTS
+# ==========================================
+
+        results_df = prediction_df[
+            [
+                "Previous_Percentage",
+                "Predicted_Percentage"
+            ]
+        ].copy()
+# ==========================================
+ # DISPLAY RESULTS
+# ==========================================
+
+        st.subheader(
+            "📊 SSC / HSSC Prediction Results"
+        )
+
+        st.dataframe(
+            results_df,
+            use_container_width=True
+        )
+
+        # ==========================================
+        # DOWNLOAD RESULTS
+        # ==========================================
+
+        csv_data = resutls_df.to_csv(
+            index=False
+        ).encode("utf-8")
+
+        st.download_button(
+            label="⬇️ Download SSC / HSSC Results",
+            data=csv_data,
+            file_name="ssc_hssc_predictions.csv",
+            mime="text/csv",
+            use_container_width=True
+        )
+
+    except Exception as e:
+
+        st.error(
+            f"❌ SSC / HSSC prediction failed: {e}"
+        )
+# ==========================================
 # SSC / HSSC AI COACH
 # ==========================================
 

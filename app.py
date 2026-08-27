@@ -1742,6 +1742,45 @@ if st.session_state.current_page == "Institute Predictor":
         st.session_state.current_page = "Home"
 
         st.rerun()
+# ==========================================
+# UNIVERSITY PREDICTION
+# ==========================================
+
+if st.session_state.current_page == "University Prediction":
+
+    # --------------------------------------
+    # INSTITUTE ACCOUNT
+    # --------------------------------------
+
+    if account_type == "institute":
+
+        show_institute_predictor(model)
+
+        st.stop()
+
+    # --------------------------------------
+    # STUDENT ACCOUNT
+    # --------------------------------------
+
+    elif account_type == "student":
+
+        # Continue to the existing
+        # Student University Prediction interface
+        pass
+
+    # --------------------------------------
+    # INVALID ACCOUNT
+    # --------------------------------------
+
+    else:
+
+        st.error(
+            "❌ Invalid account type."
+        )
+
+        st.session_state.current_page = "Home"
+
+        st.rerun()
 
 st.title("🎓 Student GPA · AI Impact Predictor")
 st.caption("A machine-learning estimate of post-semester GPA based on academic, study, and GenAI-usage features.")

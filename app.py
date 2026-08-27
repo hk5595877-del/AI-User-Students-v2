@@ -996,55 +996,55 @@ def show_institute_ssc_hssc_predictor(model):
 # CSV UPLOAD
 # ==========================================
 
-uploaded_file = st.file_uploader(
-    "📂 Upload SSC / HSSC Student CSV",
-    type=["csv"],
-    key="ssc_hssc_institute_csv"
-)
+    uploaded_file = st.file_uploader(
+         "📂 Upload SSC / HSSC Student CSV",
+         type=["csv"],
+         key="ssc_hssc_institute_csv"
+    )
 
 # ==========================================
 # RE-PREDICT BUTTON
 # ==========================================
 
-repredict = st.button(
-    "🔄 Re-predict",
-    use_container_width=True
-)
+     repredict = st.button(
+        "🔄 Re-predict",
+        use_container_width=True
+     )
 
-st.caption(
-    "⚠️ Your CSV must contain these exact columns:"
+    st.caption(
+        "⚠️ Your CSV must contain these exact columns:"
     )
-"(Major_Category, Year_of_Study, Previous_Percentage, Weekly_GenAI_Hours, Primary_Use_Case, Prompt_Engineering_Skill, "
-"Tool_Diversity, Paid_Subscription, Traditional_Study_Hours, Perceived_AI_Dependency, Institutional_Policy,"
-"Anxiety_Level_During_Exams)",
-language="text"
+    "(Major_Category, Year_of_Study, Previous_Percentage, Weekly_GenAI_Hours, Primary_Use_Case, Prompt_Engineering_Skill, "
+    "Tool_Diversity, Paid_Subscription, Traditional_Study_Hours, Perceived_AI_Dependency, Institutional_Policy,"
+    "Anxiety_Level_During_Exams)",
+    language="text"
     
 
-if uploaded_file is None:
+    if uploaded_file is None:
 
-    st.write(
-        "⚠️ Upload a CSV file to begin."
+        st.write(
+            "⚠️ Upload a CSV file to begin."
         )
 
-    return
+        return
 
     # ==========================================
     # READ CSV
     # ==========================================
 
-try:
+    try:
 
-    students_df = pd.read_csv(
-        uploaded_file
-        )
+        students_df = pd.read_csv(
+            uploaded_file
+            )
 
-except Exception as e:
+    except Exception as e:
 
-    st.error(
-        f"❌ Unable to read the CSV file: {e}"
-        )
+        st.error(
+            f"❌ Unable to read the CSV file: {e}"
+            )
 
-    return
+        return
 
     # ==========================================
     # STUDENT LIMIT

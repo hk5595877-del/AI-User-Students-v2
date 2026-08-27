@@ -1005,8 +1005,7 @@ def show_institute_ssc_hssc_predictor(model):
 # ==========================================
 # RE-PREDICT BUTTON
 # ==========================================
-
-     repredict = st.button(
+    repredict = st.button(
         "🔄 Re-predict",
         use_container_width=True
      )

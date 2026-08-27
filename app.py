@@ -1705,11 +1705,11 @@ if st.session_state.current_page == "SSC / HSSC Prediction":
 
    elif account_type == "institute":
 
-    show_institute_ssc_hssc_predictor(model)
+       show_institute_ssc_hssc_predictor(model)
 
-    st.stop()
+       st.stop()
 
-    else:
+   else:
 
         st.error(
             "❌ Invalid account type."

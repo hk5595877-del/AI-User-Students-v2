@@ -1012,8 +1012,8 @@ repredict = st.button(
     use_container_width=True
 )
 
-    st.caption(
-        "⚠️ Your CSV must contain these exact columns:"
+st.caption(
+    "⚠️ Your CSV must contain these exact columns:"
     )
 
     "(Major_Category, Year_of_Study, Previous_Percentage, Weekly_GenAI_Hours, Primary_Use_Case, Prompt_Engineering_Skill, "

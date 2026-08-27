@@ -1226,8 +1226,19 @@ def show_institute_ssc_hssc_predictor(model):
 # ==========================================
 
         results_df = prediction_df[
-            [
+            [             
+                "Major_Category",
+                "Year_of_Study",
                 "Previous_Percentage",
+                "Weekly_GenAI_Hours",
+                "Primary_Use_Case",
+                "Prompt_Engineering_Skill",
+                "Tool_Diversity",
+                "Paid_Subscription",
+                "Traditional_Study_Hours",
+                "Perceived_AI_Dependency",
+                "Institutional_Policy",
+                "Anxiety_Level_During_Exams",
                 "Predicted_Percentage"
             ]
         ].copy()
@@ -1248,7 +1259,7 @@ def show_institute_ssc_hssc_predictor(model):
         # DOWNLOAD RESULTS
         # ==========================================
 
-        csv_data = resutls_df.to_csv(
+        csv_data = results_df.to_csv(
             index=False
         ).encode("utf-8")
 

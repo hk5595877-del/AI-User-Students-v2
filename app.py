@@ -841,10 +841,10 @@ language="text"
 
 
 if uploaded_file is None:
-        st.write(
-            "⚠️Upload a CSV file to begin."
+    st.write(
+        "⚠️Upload a CSV file to begin."
         )
-        return
+    return
 
 try:
     students_df = pd.read_csv(uploaded_file)

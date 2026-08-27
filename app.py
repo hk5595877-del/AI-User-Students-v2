@@ -839,22 +839,21 @@ st.caption(
 "Anxiety_Level_During_Exams)",
 language="text"
 
-
-if uploaded_file is None:
-    st.write(
-        "⚠️Upload a CSV file to begin."
+    if uploaded_file is None:
+        st.write(
+            "⚠️Upload a CSV file to begin."
         )
-    return
+        return
+    
+    try:
+        students_df = pd.read_csv(uploaded_file)
 
-try:
-    students_df = pd.read_csv(uploaded_file)
+        except Exception as e:
 
-except Exception as e:
-
-    st.error(
-        f"Unable to read the CSV file: {e}"
-    )
-    return
+        st.error(
+            f"Unable to read the CSV file: {e}"
+        )
+        return
 
     # ==========================================
     # CHECK STUDENT LIMIT

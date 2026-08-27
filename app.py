@@ -1021,31 +1021,31 @@ st.caption(
 language="text"
     
 
-    if uploaded_file is None:
+if uploaded_file is None:
 
-        st.write(
-            "⚠️ Upload a CSV file to begin."
+    st.write(
+        "⚠️ Upload a CSV file to begin."
         )
 
-        return
+    return
 
     # ==========================================
     # READ CSV
     # ==========================================
 
-    try:
+try:
 
-        students_df = pd.read_csv(
-            uploaded_file
+    students_df = pd.read_csv(
+        uploaded_file
         )
 
-    except Exception as e:
+except Exception as e:
 
-        st.error(
-            f"❌ Unable to read the CSV file: {e}"
+    st.error(
+        f"❌ Unable to read the CSV file: {e}"
         )
 
-        return
+    return
 
     # ==========================================
     # STUDENT LIMIT

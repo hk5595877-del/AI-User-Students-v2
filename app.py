@@ -840,7 +840,7 @@ st.caption(
 language="text"
 
 
-    if uploaded_file is None:
+if uploaded_file is None:
         st.write(
             "⚠️Upload a CSV file to begin."
         )

@@ -848,7 +848,7 @@ if uploaded_file is None:
 
     try:
 
-        students_df = pd.read_csv(uploaded_file)
+         students_df = pd.read_csv(uploaded_file)
 
     except Exception as e:
 

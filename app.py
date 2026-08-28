@@ -1888,7 +1888,7 @@ with col3:
     )
     anxiety = st.slider("😰 Exam anxiety", 1, 10, 5)
 
-model_year = ssc_hssc_year_mapping(class_level)
+
 
 #-------------------------------
   #Student Prediction.

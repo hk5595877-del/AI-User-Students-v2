@@ -1528,7 +1528,7 @@ def show_student_ssc_hssc_predictor(model):
 
             "Major_Category": major,
 
-            "Year_of_Study": year,
+            "Year_of_Study": ssc_hssc_year_mapping(class_level),
 
             "Pre_Semester_GPA": input_gpa,
 
@@ -1896,7 +1896,7 @@ model_year = ssc_hssc_year_mapping(class_level)
 def make_features():
     return pd.DataFrame([{
         "Major_Category": major,
-        "Year_of_Study": model_year,
+        "Year_of_Study": ssc_hssc_year_mapping(class_level),
         "Pre_Semester_GPA": pre_gpa,
         "Weekly_GenAI_Hours": genai_hours,
         "Primary_Use_Case": use_case,

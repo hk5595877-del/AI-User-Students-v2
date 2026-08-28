@@ -1893,7 +1893,7 @@ with col3:
 #-------------------------------
   #Student Prediction.
 #--------------------------------
-def make_features():
+def make_features(class_level):
     return pd.DataFrame([{
         "Major_Category": major,
         "Year_of_Study": ssc_hssc_year_mapping(class_level),
@@ -1963,7 +1963,7 @@ if st.button(
     use_container_width=True
 ):
 
-    features_df = make_features()
+    features_df = make_features(class_level)
 
     prediction = float(
         np.clip(

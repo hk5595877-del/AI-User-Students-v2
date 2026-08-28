@@ -1398,14 +1398,10 @@ def show_student_ssc_hssc_predictor(model):
             key="ssc_major"
         )
 
-        year = st.selectbox(
-            "📚 Year of Study",
+        class_level = st.selectbox(
+            "📚 Class",
             [
-                "Freshman",
-                "Sophomore",
-                "Junior",
-                "Senior",
-                "Graduate"
+                ["9th or below", "10th", "11th", "12th"]
             ],
             key="ssc_year"
         )
@@ -1610,6 +1606,25 @@ def show_student_ssc_hssc_predictor(model):
             "The prediction is an educational estimate and "
             "should not be treated as an official SSC/HSSC result."
         )
+# ==========================================
+# SSC / HSSC CLASS → MODEL YEAR MAPPING
+# ==========================================
+
+def ssc_hssc_year_mapping(class_level):
+
+    if class_level == "9th or below":
+        return "Freshman"
+
+    elif class_level == "10th":
+        return "Sophomore"
+        
+    elif class_level == "11th":
+        return "Junior"
+
+    elif class_level == "12th":
+        return "Senior"
+
+    return "Senior"
 
 # ==========================================
 # PROTECT THE MAIN APPLICATION
@@ -1870,13 +1885,15 @@ with col3:
     )
     anxiety = st.slider("😰 Exam anxiety", 1, 10, 5)
 
+model_year = ssc_hssc_year_mapping(class_level)
+
 #-------------------------------
   #Student Prediction.
 #--------------------------------
 def make_features():
     return pd.DataFrame([{
         "Major_Category": major,
-        "Year_of_Study": year,
+        "Year_of_Study": model_year,
         "Pre_Semester_GPA": pre_gpa,
         "Weekly_GenAI_Hours": genai_hours,
         "Primary_Use_Case": use_case,

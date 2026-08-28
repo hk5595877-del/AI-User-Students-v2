@@ -633,15 +633,6 @@ def show_home_page():
             "to receive an estimated post-semester GPA."
         )
 
-        if st.button(
-            "🚀 Start GPA Prediction",
-            type="primary",
-            use_container_width=True
-        ):
-
-            st.session_state.current_page = "University Prediction"
-
-            st.rerun()
 
     # ==========================================
     # FEATURES
@@ -805,7 +796,7 @@ def show_home_page():
 
 def show_institute_predictor(model):
 
-    st.title("🏫 University GPA Batch Prediction")
+    st.title("🏫 University Batch Prediction")
 
     st.write(
         "Upload a CSV file containing student academic information "
@@ -1839,7 +1830,7 @@ if st.session_state.current_page == "University Prediction":
 
         st.rerun()
 
-st.title("🎓 Student GPA · AI Impact Predictor")
+st.title("🎓 University GPA Predictor")
 st.caption("A machine-learning estimate of post-semester GPA based on academic, study, and GenAI-usage features.")
 
 with st.sidebar:

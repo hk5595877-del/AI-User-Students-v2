@@ -1401,7 +1401,10 @@ def show_student_ssc_hssc_predictor(model):
         class_level = st.selectbox(
             "📚 Class",
             [
-                ["9th or below", "10th", "11th", "12th"]
+                "9th or below",
+                "10th",
+                "11th",
+                "12th"
             ],
             key="ssc_year"
         )

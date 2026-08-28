@@ -337,9 +337,13 @@ def show_auth_page():
     )
 
     st.write(
-        "StudentGPA AI uses academic performance, study habits, "
-        "GenAI usage, and other student factors to estimate "
-        "post-semester GPA and provide personalized study guidance."
+        "Today Gen AI is everywhere in our live especially in student's..... "
+        "Is anyone measuring it's impact? Yes! but only when you moniter your "
+        "academic performance, study habits, GenAI usage, and other student factors to estimate "
+        "post-semester GPA/ Percentage % and provide personalized study guidance."        
+    )
+    st.subheader(
+        "Are you ready to predict your future results before they come ✅."
     )
 
     st.info(

@@ -8,7 +8,7 @@ from supabase import create_client
 #=========================================
 # HTML Tag for google search.
 #=========================================
-<meta name="google-site-verification" content="eyCE-NZo60XkkPxfzF7NdRbdYew-WGnCq6MjRdmzbC8" />
+st.markdown('<meta name="google-site-verification" content="eyCE-NZo6OXkkPxfzF7NdRbdYew-WGnCq6MjRdmzbC8" />', unsafe_allow_html=True)
 
 # ==========================================
 # SUPABASE CONNECTION

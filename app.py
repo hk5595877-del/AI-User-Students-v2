@@ -5,23 +5,6 @@ import numpy as np
 import pandas as pd
 import streamlit as st
 from supabase import create_client
-#=========================================
-# HTML Tag for google search.
-#=========================================
-def add_google_verification():
-    try:
-        index_path = Path(st.__file__).parent / "static" / "index.html"
-        html = index_path.read_text(encoding="utf-8")
-        
-        tag = '<meta name="google-site-verification" content="eyCE-NZo6OXkkPxfzF7NdRbdYew-WGnCq6MjRdmzbC8" />'
-        
-        if tag not in html:
-            html = html.replace("<head>", f"<head>\n{tag}", 1)
-            index_path.write_text(html, encoding="utf-8")
-    except Exception:
-        pass
-
-add_google_verification()
 
 # ==========================================
 # SUPABASE CONNECTION

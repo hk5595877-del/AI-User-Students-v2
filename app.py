@@ -5,6 +5,10 @@ import numpy as np
 import pandas as pd
 import streamlit as st
 from supabase import create_client
+#=========================================
+# HTML Tag for google search.
+#=========================================
+<meta name="google-site-verification" content="eyCE-NZo60XkkPxfzF7NdRbdYew-WGnCq6MjRdmzbC8" />
 # ==========================================
 # SUPABASE CONNECTION
 # ==========================================

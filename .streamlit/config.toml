@@ -1,4 +1,3 @@
 [client]
 toolbarMode = "minimal"
-[server]
-enableStaticServing = true
+

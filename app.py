@@ -1262,7 +1262,6 @@ def show_institute_ssc_hssc_predictor(model):
         ] = np.round(
             predictions,
             2
-        )
 
         # ==========================================
         # DISPLAY RESULTS

@@ -460,8 +460,7 @@ def show_auth_page():
                     )
 
                     if response.user:
-                        if response.user:
-
+                        
                         st.success(
                             "✅ Account created successfully!"
                         )
@@ -954,6 +953,7 @@ def show_institute_predictor(model):
             predictions,
             2
         )
+        track_event("GPA_batch_calculated")
 
         # ==========================================
         # DISPLAY RESULTS
@@ -1253,6 +1253,34 @@ def show_institute_ssc_hssc_predictor(model):
         ] = prediction_df[
             "Predicted_Percentage"
         ].round(2)
+         # ==========================================
+    # RUN PREDICTIONS
+    # ==========================================
+
+    try:
+
+        prediction_df = students_df.copy()
+
+        predictions = model.predict(
+            prediction_df[required_columns]
+        )
+        track_event("GPA_batch_calculated")
+
+        predictions = np.clip(
+            predictions,
+            0.0,
+            4.0
+        )
+
+        prediction_df[
+            "Predicted_Post_Semester_GPA"
+        ] = np.round(
+            predictions,
+            2
+
+        # ==========================================
+        # DISPLAY RESULTS
+        # ==========================================
 
         
 # ==========================================

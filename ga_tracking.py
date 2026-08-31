@@ -1,45 +1,56 @@
 """
-ga_tracking.py
-
-Reusable helper to fire custom GA4 events from a Streamlit app.
-
-Setup:
-1. Find your GA4 Measurement ID: GA4 Admin -> Data Streams -> your Web stream -> Measurement ID (looks like "G-XXXXXXXXXX").
-2. Paste it into GA_MEASUREMENT_ID below.
-3. Import track_event() and call it right after the action you want to log.
+GA4 event tracking for StudentGPA AI.
 """
 
-import json
-import streamlit.components.v1 as components
+import requests
+import streamlit as st
 
-GA_MEASUREMENT_ID = "G-BLH8FSGHR1"  # <-- replace with your real Measurement ID
+
+GA_MEASUREMENT_ID = st.secrets["GA_MEASUREMENT_ID"]
+GA_API_SECRET = st.secrets["GA_API_SECRET"]
 
 
 def track_event(event_name: str, params: dict | None = None) -> None:
-    """
-    Fires a custom GA4 event from the currently rendered Streamlit page.
 
-    event_name: GA4 event name, e.g. "sign_up" or "gpa_calculated"
-    params: optional dict of extra event parameters, e.g. {"method": "email"}
-
-    Call this immediately after the action happens (e.g. right after a
-    successful signup, or right after a GPA calculation completes), inside
-    the same `if st.button(...)` / `if submitted:` block.
-    """
     params = params or {}
-    params_json = json.dumps(params)
 
-    components.html(
-        f"""
-        <script async src="https://www.googletagmanager.com/gtag/js?id={GA_MEASUREMENT_ID}"></script>
-        <script>
-          window.dataLayer = window.dataLayer || [];
-          function gtag(){{ dataLayer.push(arguments); }}
-          gtag('js', new Date());
-          gtag('config', '{GA_MEASUREMENT_ID}');
-          gtag('event', '{event_name}', {params_json});
-        </script>
-        """,
-        height=0,
-        width=0,
+    url = (
+        "https://www.google-analytics.com/mp/collect"
+        f"?measurement_id={GA_MEASUREMENT_ID}"
+        f"&api_secret={GA_API_SECRET}"
     )
+
+    payload = {
+        "client_id": "studentgpa_streamlit",
+        "events": [
+            {
+                "name": event_name,
+                "params": {
+                    **params,
+                    "engagement_time_msec": 100
+                }
+            }
+        ]
+    }
+
+    try:
+
+        response = requests.post(
+            url,
+            json=payload,
+            timeout=5
+        )
+
+        if response.status_code >= 400:
+
+            print(
+                f"GA4 tracking failed: "
+                f"{response.status_code} "
+                f"{response.text}"
+            )
+
+    except Exception as e:
+
+        print(
+            f"GA4 tracking error: {e}"
+        )

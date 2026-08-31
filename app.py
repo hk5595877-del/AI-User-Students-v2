@@ -1238,7 +1238,7 @@ def show_institute_ssc_hssc_predictor(model):
         ] = prediction_df[
             "Predicted_Percentage"
         ].round(2)
-         # ==========================================
+    # ==========================================
     # RUN PREDICTIONS
     # ==========================================
 
@@ -1262,6 +1262,7 @@ def show_institute_ssc_hssc_predictor(model):
         ] = np.round(
             predictions,
             2
+        )
 
         # ==========================================
         # DISPLAY RESULTS
@@ -1293,20 +1294,20 @@ def show_institute_ssc_hssc_predictor(model):
  # DISPLAY RESULTS
 # ==========================================
 
-    st.subheader(
-        "📊 GPA Prediction Results"
-    )
+        st.subheader(
+            "📊 GPA Prediction Results"
+        )
 
-    st.dataframe(
-        prediction_df,
-        use_container_width=True
-    )
+        st.dataframe(
+            prediction_df,
+            use_container_width=True
+        )
 
-except Exception as e:
+    except Exception as e:
 
-    st.error(
-        f"❌ Prediction failed: {e}"
-    )
+        st.error(
+            f"❌ Prediction failed: {e}"
+        )
 
         # ==========================================
         # DOWNLOAD RESULTS

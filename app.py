@@ -991,32 +991,38 @@ def show_institute_ssc_hssc_predictor(model):
         "Maximum 50 students per upload."
     )
 
-# ==========================================
-# CSV UPLOAD
-# ==========================================
+    # ==========================================
+    # CSV UPLOAD
+    # ==========================================
 
     uploaded_file = st.file_uploader(
-         "📂 Upload SSC / HSSC Student CSV",
-         type=["csv"],
-         key="ssc_hssc_institute_csv"
+        "📂 Upload SSC / HSSC Student CSV",
+        type=["csv"],
+        key="ssc_hssc_institute_csv"
     )
 
-# ==========================================
-# RE-PREDICT BUTTON
-# ==========================================
+    # ==========================================
+    # RE-PREDICT BUTTON
+    # ==========================================
+
     repredict = st.button(
         "🔄 Re-predict",
         use_container_width=True
-     )
+    )
 
     st.caption(
         "⚠️ Your CSV must contain these exact columns:"
     )
-    "(Major_Category, Year_of_Study, Previous_Percentage, Weekly_GenAI_Hours, Primary_Use_Case, Prompt_Engineering_Skill, "
-    "Tool_Diversity, Paid_Subscription, Traditional_Study_Hours, Perceived_AI_Dependency, Institutional_Policy,"
-    "Anxiety_Level_During_Exams)",
-    language="text"
-    
+
+    st.code(
+        "(Major_Category, Year_of_Study, Previous_Percentage, "
+        "Weekly_GenAI_Hours, Primary_Use_Case, "
+        "Prompt_Engineering_Skill, Tool_Diversity, "
+        "Paid_Subscription, Traditional_Study_Hours, "
+        "Perceived_AI_Dependency, Institutional_Policy, "
+        "Anxiety_Level_During_Exams)",
+        language="text"
+    )
 
     if uploaded_file is None:
 
@@ -1032,15 +1038,13 @@ def show_institute_ssc_hssc_predictor(model):
 
     try:
 
-        students_df = pd.read_csv(
-            uploaded_file
-            )
+        students_df = pd.read_csv(uploaded_file)
 
     except Exception as e:
 
         st.error(
             f"❌ Unable to read the CSV file: {e}"
-            )
+        )
 
         return
 
@@ -1112,20 +1116,10 @@ def show_institute_ssc_hssc_predictor(model):
     # VALIDATE PERCENTAGE
     # ==========================================
 
-    try:
-
-        students_df["Previous_Percentage"] = pd.to_numeric(
-            students_df["Previous_Percentage"],
-            errors="coerce"
-        )
-
-    except Exception:
-
-        st.error(
-            "❌ Previous_Percentage must contain numeric values."
-        )
-
-        return
+    students_df["Previous_Percentage"] = pd.to_numeric(
+        students_df["Previous_Percentage"],
+        errors="coerce"
+    )
 
     if students_df["Previous_Percentage"].isna().any():
 
@@ -1148,7 +1142,7 @@ def show_institute_ssc_hssc_predictor(model):
         return
 
     # ==========================================
-    # RUN PREDICTIONS
+    # RUN SSC / HSSC PREDICTIONS
     # ==========================================
 
     try:
@@ -1159,16 +1153,14 @@ def show_institute_ssc_hssc_predictor(model):
         # Percentage → GPA
         # --------------------------------------
 
-        prediction_df[
-            "Pre_Semester_GPA"
-        ] = prediction_df[
-            "Previous_Percentage"
-        ].apply(
-            percentage_to_gpa
+        prediction_df["Pre_Semester_GPA"] = (
+            prediction_df["Previous_Percentage"]
+            .apply(percentage_to_gpa)
         )
-        # ==========================================
-        # CONVERT CSV VALUES TO MODEL FORMAT
-        # ==========================================
+
+        # --------------------------------------
+        # Convert Paid_Subscription
+        # --------------------------------------
 
         prediction_df["Paid_Subscription"] = (
             prediction_df["Paid_Subscription"]
@@ -1178,11 +1170,30 @@ def show_institute_ssc_hssc_predictor(model):
             .map({
                 "yes": True,
                 "no": False
-    })
-)
+            })
+        )
+
+        if prediction_df["Paid_Subscription"].isna().any():
+
+            st.error(
+                "❌ Paid_Subscription must contain only "
+                "'Yes' or 'No'."
+            )
+
+            return
 
         # --------------------------------------
-        # Model Features
+        # Convert Year of Study
+        # --------------------------------------
+
+        prediction_df["Year_of_Study"] = (
+            prediction_df["Year_of_Study"]
+            .astype(str)
+            .str.strip()
+        )
+
+        # --------------------------------------
+        # MODEL FEATURES
         # --------------------------------------
 
         model_columns = [
@@ -1200,6 +1211,10 @@ def show_institute_ssc_hssc_predictor(model):
             "Anxiety_Level_During_Exams",
         ]
 
+        # --------------------------------------
+        # MODEL PREDICTION
+        # --------------------------------------
+
         predictions = model.predict(
             prediction_df[model_columns]
         )
@@ -1211,70 +1226,32 @@ def show_institute_ssc_hssc_predictor(model):
         )
 
         # --------------------------------------
-        # Predicted GPA
+        # PREDICTED GPA
         # --------------------------------------
 
-        prediction_df[
-            "Predicted_GPA"
-        ] = np.round(
+        prediction_df["Predicted_GPA"] = np.round(
             predictions,
             2
         )
 
         # --------------------------------------
-        # GPA → Percentage
+        # GPA → PERCENTAGE
         # --------------------------------------
 
-        prediction_df[
-            "Predicted_Percentage"
-        ] = prediction_df[
-            "Predicted_GPA"
-        ].apply(
-            gpa_to_percentage
+        prediction_df["Predicted_Percentage"] = (
+            prediction_df["Predicted_GPA"]
+            .apply(gpa_to_percentage)
+            .round(2)
         )
 
-        prediction_df[
-            "Predicted_Percentage"
-        ] = prediction_df[
-            "Predicted_Percentage"
-        ].round(2)
-    # ==========================================
-    # RUN PREDICTIONS
-    # ==========================================
-
-    try:
-
-        prediction_df = students_df.copy()
-
-        predictions = model.predict(
-            prediction_df[required_columns]
-        )
         track_event("GPA_batch_calculated")
 
-        predictions = np.clip(
-            predictions,
-            0.0,
-            4.0
-        )
-
-        prediction_df[
-            "Predicted_Post_Semester_GPA"
-        ] = np.round(
-            predictions,
-            2
-        )
-
         # ==========================================
-        # DISPLAY RESULTS
+        # SHOW RESULTS
         # ==========================================
-
-        
-# ==========================================
-# SHOW ONLY PERCENTAGE RESULTS
-# ==========================================
 
         results_df = prediction_df[
-            [             
+            [
                 "Major_Category",
                 "Year_of_Study",
                 "Previous_Percentage",
@@ -1287,25 +1264,18 @@ def show_institute_ssc_hssc_predictor(model):
                 "Perceived_AI_Dependency",
                 "Institutional_Policy",
                 "Anxiety_Level_During_Exams",
+                "Predicted_GPA",
                 "Predicted_Percentage"
             ]
         ].copy()
-# ==========================================
- # DISPLAY RESULTS
-# ==========================================
 
         st.subheader(
-            "📊 GPA Prediction Results"
+            "📊 SSC / HSSC Prediction Results"
         )
 
         st.dataframe(
-            prediction_df,
+            results_df,
             use_container_width=True
-        )
-    except Exception as e:
-
-        st.error(
-            f"❌ Prediction failed: {e}"
         )
 
         # ==========================================
@@ -1329,6 +1299,8 @@ def show_institute_ssc_hssc_predictor(model):
         st.error(
             f"❌ SSC / HSSC prediction failed: {e}"
         )
+
+
 # ==========================================
 # SSC / HSSC AI COACH
 # ==========================================

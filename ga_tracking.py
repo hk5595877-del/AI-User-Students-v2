@@ -12,7 +12,7 @@ Setup:
 import json
 import streamlit.components.v1 as components
 
-GA_MEASUREMENT_ID = "G-XXXXXXXXXX"  # <-- replace with your real Measurement ID
+GA_MEASUREMENT_ID = "G-BLH8FSGHR1"  # <-- replace with your real Measurement ID
 
 
 def track_event(event_name: str, params: dict | None = None) -> None:

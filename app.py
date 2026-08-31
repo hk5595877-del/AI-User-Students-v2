@@ -5,6 +5,7 @@ import numpy as np
 import pandas as pd
 import streamlit as st
 from supabase import create_client
+from ga_tracking import track_event
 
 # ==========================================
 # SUPABASE CONNECTION
@@ -459,6 +460,23 @@ def show_auth_page():
                     )
 
                     if response.user:
+                        if response.user:
+
+                        st.success(
+                            "✅ Account created successfully!"
+                        )
+
+                        st.info(
+                            "📧 Please check your email and "
+                            "confirm your account before signing in."
+                        )
+                        track_event("sign_up")
+
+                except Exception as e:
+
+                    st.error(
+                        f"Unable to create account: {str(e)}"
+                    )
 
                         st.success(
                             "✅ Account created successfully!"
@@ -1556,6 +1574,7 @@ def show_student_ssc_hssc_predictor(model):
         predicted_percentage = gpa_to_percentage(
             predicted_gpa
         )
+        track_event("GPA_calculated")
 
         # ==========================================
         # RESULTS

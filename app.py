@@ -477,14 +477,14 @@ def show_auth_page():
                         f"Unable to create account: {str(e)}"
                     )
 
-                        st.success(
-                            "✅ Account created successfully!"
-                        )
+                st.success(
+                    "✅ Account created successfully!"
+                    )
 
-                        st.info(
-                            "📧 Please check your email and "
-                            "confirm your account before signing in."
-                        )
+                st.info(
+                    "📧 Please check your email and "
+                    "confirm your account before signing in."
+                    )
 
                 except Exception as e:
 

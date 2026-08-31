@@ -460,7 +460,8 @@ def show_auth_page():
                     )
 
                     if response.user:
-                        
+                        track_event("sign_up")
+
                         st.success(
                             "✅ Account created successfully!"
                         )
@@ -469,22 +470,6 @@ def show_auth_page():
                             "📧 Please check your email and "
                             "confirm your account before signing in."
                         )
-                        track_event("sign_up")
-
-                except Exception as e:
-
-                    st.error(
-                        f"Unable to create account: {str(e)}"
-                    )
-
-                st.success(
-                    "✅ Account created successfully!"
-                    )
-
-                st.info(
-                    "📧 Please check your email and "
-                    "confirm your account before signing in."
-                    )
 
                 except Exception as e:
 

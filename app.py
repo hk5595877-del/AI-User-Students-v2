@@ -1294,14 +1294,20 @@ def show_institute_ssc_hssc_predictor(model):
  # DISPLAY RESULTS
 # ==========================================
 
-        st.subheader(
-            "📊 SSC / HSSC Prediction Results"
-        )
+    st.subheader(
+        "📊 GPA Prediction Results"
+    )
 
-        st.dataframe(
-            results_df,
-            use_container_width=True
-        )
+    st.dataframe(
+        prediction_df,
+        use_container_width=True
+    )
+
+except Exception as e:
+
+    st.error(
+        f"❌ Prediction failed: {e}"
+    )
 
         # ==========================================
         # DOWNLOAD RESULTS

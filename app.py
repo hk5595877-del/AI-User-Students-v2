@@ -1955,14 +1955,7 @@ def coach_text(prediction):
 
     return messages
 
-# ==========================================
-# STUDENT PREDICTION
-# ==========================================
-class_level = st.selectbox(
-    "📚 Class",
-    ["9th or below", "10th", "11th", "12th"],
-    index=0
-)
+
 if st.button(
     "🔮 Predict Post-Semester GPA",
     type="primary",

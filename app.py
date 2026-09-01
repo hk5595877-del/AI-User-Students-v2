@@ -1953,7 +1953,13 @@ def coach_text(prediction):
         f"The model estimates a post-semester GPA of about {prediction:.2f}."
     )
 
+    
     return messages
+class_level = st.selectbox(
+    "🎓 Select Class / Year",
+    ["9th", "10th", "11th", "12th"]
+)
+
 
 
 if st.button(

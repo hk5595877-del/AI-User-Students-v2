@@ -1895,10 +1895,10 @@ with col3:
 #-------------------------------
   #Student Prediction.
 #--------------------------------
-def make_features(class_level):
+def make_features():
     return pd.DataFrame([{
         "Major_Category": major,
-        "Year_of_Study": ssc_hssc_year_mapping(class_level),
+        "Year_of_Study": year,
         "Pre_Semester_GPA": pre_gpa,
         "Weekly_GenAI_Hours": genai_hours,
         "Primary_Use_Case": use_case,
@@ -1955,10 +1955,6 @@ def coach_text(prediction):
 
     
     return messages
-class_level = st.selectbox(
-    "🎓 Select Class / Year",
-    ["9th", "10th", "11th", "12th"]
-)
 
 
 
@@ -1968,7 +1964,7 @@ if st.button(
     use_container_width=True
 ):
 
-    features_df = make_features(class_level)
+    features_df = make_features()
 
     prediction = float(
         np.clip(

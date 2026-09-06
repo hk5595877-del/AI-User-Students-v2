@@ -15,15 +15,26 @@ Haris Ali Khan
 ## Project Description
 
 StudentGPA AI is an AI-powered academic application designed to
-estimate student GPA outcomes from academic and related features
-and provide AI-assisted academic guidance.
+estimate student GPA outcomes from academic, study-related, and
+Generative AI usage features and provide AI-assisted academic guidance.
 
-## Original Development
+## Development
 
-The project was developed as an independent software and machine
+StudentGPA AI was developed as an independent software and machine
 learning project.
 
-Major development activities included:
+During the early development stage, a publicly available GitHub
+repository was used as a structural/reference resource:
+
+https://github.com/hk5595877-del/nyc
+
+The current application was subsequently developed and modified for
+the StudentGPA AI use case.
+
+The developer does not claim ownership of third-party software,
+libraries, datasets, or services.
+
+## Major Development Activities
 
 - Dataset preparation and analysis
 - Machine learning model development
@@ -31,36 +42,55 @@ Major development activities included:
 - CatBoost model development
 - Model evaluation
 - Streamlit application development
+- Student prediction workflow
+- Institute batch prediction workflow
+- SSC/HSSC prediction workflow
 - GenAI-assisted academic guidance
 - User interface development
+- Authentication implementation
+- Analytics implementation
 - Dark/light theme implementation
-- Public deployment
+- Cloud deployment
 
 ## Machine Learning
 
-The application includes a trained machine learning model and
-the corresponding training/evaluation code.
-
 Training code:
+
 `train_model.py`
 
-Model:
+Trained model:
+
 `model.joblib`
 
 Evaluation information:
+
 `model_metrics.json`
+
+Training dataset:
+
+`ai_student_impact_dataset.csv`
+
+The dataset is identified as CC0 / Public Domain on its Kaggle source
+page.
 
 ## Public Application
 
 https://studentgpa-ai.streamlit.app/
 
 ## Source Repository
-[https://github.com/hk5595877-del/AI-User-Students-v2]
 
-## Development Record
+https://github.com/hk5595877-del/AI-User-Students-v2
 
-The Git repository history and associated project files document
-the development and modification of this project.
+---
+
+Copyright © 2026 Haris Ali Khan.
+
+The copyright claim above applies only to original materials owned by
+the developer.
+
+Third-party software, datasets, libraries, models, trademarks,
+services, and other materials remain subject to their respective
+owners and licenses.
 
 ---
 

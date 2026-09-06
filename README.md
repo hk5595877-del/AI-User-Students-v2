@@ -8,30 +8,34 @@ The original app depended on an Azure ML real-time endpoint and API key. That en
 
 **v2 runs the trained scikit-learn pipeline directly inside Streamlit:**
 
-Student inputs → preprocessing → Random Forest model (100 trees) → GPA estimate → educational AI-style guidance
+Student inputs → preprocessing → CatBoostRegressor → GPA estimate → educational AI-style guidance
 
 This makes the project portable and easy to deploy on Streamlit Community Cloud, Docker, or another Python host.
 
-## Model
+## Machine Learning Model
 
-The included model was retrained from `ai_student_impact_dataset.csv`.
+The application uses a CatBoostRegressor trained on the included
+AI Student Impact Dataset.
 
 - Target: `Post_Semester_GPA`
 - Training/test split: 80/20
-- Regressor: CatBoostRegressor
+- Model: CatBoostRegressor
 - Random seed: 42
-- Student ID excluded from training because it is an identifier, not a meaningful predictive feature.
-- Categorical variables are one-hot encoded.
-- Unknown categories are handled safely.
-- Missing numeric values use median imputation.
+- Student ID excluded from training
+- Categorical variables handled by the training pipeline
+- Missing values handled during preprocessing
 
-Validation results for the included model:
+### Validation
 
-- MAE: approximately **0.118**
-- RMSE: approximately **0.151**
-- R²: approximately **0.905**
+The included model has the following dataset-level validation results:
 
-These metrics are dataset-level validation results and do not guarantee an individual's prediction accuracy.
+- MAE: approximately 0.118
+- RMSE: approximately 0.151
+- R²: approximately 0.905
+
+These metrics describe validation performance on the available dataset
+and do not guarantee the accuracy of an individual student's
+prediction.
 
 ## Run locally
 

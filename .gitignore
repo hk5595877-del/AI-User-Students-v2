@@ -4,4 +4,10 @@ __pycache__/
 *.py[cod]
 .env
 .streamlit/secrets.toml
+*.key
+*.pem
+*.p12
+credentials.json
+service-account*.json
+secrets.toml
 .DS_Store
